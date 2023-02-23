@@ -1,0 +1,77 @@
+const options = JSON.parse(`<%= JSON.stringify(options) %>`);
+export default {
+	fetchOnServer: false,
+
+	props: {
+		value: {
+			type: [String, Number],
+			default: null,
+		},
+		items: {
+			type: [Array],
+			default: null,
+		},
+		api: {
+			type: [String],
+			default: null,
+		},
+		rules: {
+			type: [Array],
+			default: () => [],
+		},
+		label: {
+			type: [String],
+			default: null,
+		},
+		error: {
+			type: [Boolean],
+			default: false,
+		},
+		errorMessages: {
+			type: [Array],
+			default: () => [],
+		},
+	},
+	data() {
+		return {
+			apiItems: [],
+			defaultStyle: {
+				dense: options.style.dense,
+				filled: options.style.filled,
+				rounded: options.style.rounded,
+				flat: options.style.flat,
+				outlined: options.style.outlined,
+			},
+		};
+	},
+	async fetch() {
+		if (this.api) {
+			this.apiItems = await this.$axios.$getOnce(this.api);
+		}
+	},
+	computed: {
+		localValue: {
+			get() {
+				return this.value;
+			},
+			set(value) {
+				this.$emit("input", value);
+			},
+		},
+		localItems() {
+			return this.apiItems?.length > 0 ? this.apiItems : this.items || [];
+		},
+		propsBus() {
+			return {
+				items: this.localItems,
+				rules: this.rules,
+				label: this.label,
+				error: this.error,
+				errorMessages: this.errorMessages,
+				loading: this.$fetchState?.pending,
+				...this.defaultStyle,
+				...this.$attrs,
+			};
+		},
+	},
+};
