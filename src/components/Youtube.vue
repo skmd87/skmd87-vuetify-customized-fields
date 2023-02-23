@@ -19,6 +19,9 @@
 					{{ $t("common.preview") }}
 				</v-btn>
 			</template>
+			<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+				<slot :name="name" v-bind="item"></slot>
+			</template>
 		</v-text-field>
 		<v-bottom-sheet v-model="previewModel" inset>
 			<v-responsive :aspect-ratio="16 / 9"> <youtube-video :src="localValue" /> </v-responsive>

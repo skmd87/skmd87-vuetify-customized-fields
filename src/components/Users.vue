@@ -35,6 +35,9 @@
 				</v-list-item-content>
 			</v-list-item>
 		</template>
+		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+			<slot :name="name" v-bind="item"></slot>
+		</template>
 	</v-autocomplete>
 </template>
 

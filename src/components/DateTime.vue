@@ -21,6 +21,9 @@
 		<template #timeIcon>
 			<v-icon>mdi-clock</v-icon>
 		</template>
+		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+			<slot :name="name" v-bind="item"></slot>
+		</template>
 	</v-datetime-picker>
 </template>
 

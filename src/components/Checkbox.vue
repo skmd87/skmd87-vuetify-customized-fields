@@ -10,7 +10,11 @@
 			:label="item.text"
 			:true-value="true"
 			:false-value="false"
-		></v-checkbox>
+		>
+		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+			<slot :name="name" v-bind="item"></slot>
+		</template>
+		</v-checkbox>
 	</div>
 </template>
 

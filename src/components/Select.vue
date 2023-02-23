@@ -1,5 +1,9 @@
 <template>
-	<v-select v-model="localValue" v-bind="propsBus" v-on="$listeners"></v-select>
+	<v-select v-model="localValue" v-bind="propsBus" v-on="$listeners">
+		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+			<slot :name="name" v-bind="item"></slot>
+		</template>
+	</v-select>
 </template>
 <script>
 import field from "../mixins/field";

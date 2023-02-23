@@ -15,6 +15,9 @@
 					@focus="focusHandler"
 					@blur="blurHandler"
 				>
+				<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+					<slot :name="name" v-bind="item"></slot>
+				</template>
 				</v-text-field>
 				<v-sheet height="4">
 					<v-progress-linear v-show="showTooltip" :value="progress" :color="color" rounded></v-progress-linear>

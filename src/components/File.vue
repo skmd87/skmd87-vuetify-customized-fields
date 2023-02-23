@@ -1,5 +1,9 @@
 <template>
-	<v-file-input v-model="localValue" v-bind="$attrs"></v-file-input>
+	<v-file-input v-model="localValue" v-bind="propsBus">
+		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+			<slot :name="name" v-bind="item"></slot>
+		</template>
+	</v-file-input>
 </template>
 
 <script>

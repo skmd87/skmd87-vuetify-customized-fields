@@ -6,6 +6,9 @@
 		api="/v1/lookups/countries"
 		v-on="$listeners"
 	>
+		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+			<slot :name="name" v-bind="item"></slot>
+		</template>
 	</field-autocomplete>
 </template>
 <script>
