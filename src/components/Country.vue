@@ -9,4 +9,8 @@
 	</field-autocomplete>
 </template>
 <script>
-[object Promise]</script>
+import field from "../mixins/field";
+export default {
+	mixins: [field],
+};
+</script>

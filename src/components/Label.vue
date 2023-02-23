@@ -3,7 +3,11 @@
 </template>
 
 <script>
-[object Promise]</script>
+import field from "../mixins/field";
+export default {
+	mixins: [field],
+};
+</script>
 
 <style lang="scss">
 label.field-label {
