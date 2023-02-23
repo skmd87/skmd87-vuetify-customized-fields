@@ -6,8 +6,4 @@
 </template>
 
 <script>
-import field from "~/mixins/field";
-export default {
-	mixins: [field],
-};
-</script>
+[object Promise]</script>
