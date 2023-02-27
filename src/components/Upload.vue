@@ -65,7 +65,7 @@
 															color="white"
 															@click="del(file.name)"
 														>
-															<v-icon>{{ $icons.delete }}</v-icon>
+															<v-icon>{ $icons.delete }}</v-icon>
 														</v-btn>
 													</div>
 												</div>
@@ -81,7 +81,7 @@
 					<v-card color="rgba(0, 0, 0, 0.06)" flat class="d-flex justify-center align-center" :width="100" :height="100">
 						<v-btn width="100%" height="100%" plain :loading="loading" @click="upload">
 							<div class="d-flex flex-column justify-center align-center">
-								<v-icon x-large>{{ $icons.new }}</v-icon>
+								<!-- <v-icon x-large>{{ $icons.new }}</v-icon> -->
 								<div class="my-1">{{ $t("common.upload") }}</div>
 							</div>
 						</v-btn>
@@ -175,23 +175,23 @@ export default {
 		},
 	},
 	watch: {
-		value: {
-			handler(now, before) {
-				this.sync();
-				if (Array.isArray(now)) {
-					// get the deleted items
-					const deleted = before.filter((item) => !now.includes(item));
-					// delete the deleted items
-					deleted.forEach((item) => {
-						this.$delete(this.files, item);
-					});
-				} else if (now !== before) {
-					this.$delete(this.files, before);
-				}
-			},
-			immediate: true,
-			deep: true,
-		},
+		// value: {
+		// 	handler(now, before) {
+		// 		this.sync();
+		// 		if (Array.isArray(now)) {
+		// 			// get the deleted items
+		// 			const deleted = before.filter((item) => !now.includes(item));
+		// 			// delete the deleted items
+		// 			deleted.forEach((item) => {
+		// 				this.$delete(this.files, item);
+		// 			});
+		// 		} else if (now !== before) {
+		// 			this.$delete(this.files, before);
+		// 		}
+		// 	},
+		// 	immediate: true,
+		// 	deep: true,
+		// },
 	},
 	mounted() {
 		//	this.sync();

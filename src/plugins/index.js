@@ -7,8 +7,8 @@ import * as vuetifyCustomizedFields from "../components/index.js";
 // }
 const options = JSON.parse(`<%= JSON.stringify(options) %>`);
 
-console.log("🚀 ~ file: index.js:10 ~ options:", options);
+
 Object.entries(vuetifyCustomizedFields.default).forEach(([name, component]) => {
-	console.log(name, component);
+
 	Vue.component(options.prefix + name, component);
 });
