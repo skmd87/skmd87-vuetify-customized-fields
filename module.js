@@ -1,6 +1,8 @@
 // module.js
 const { resolve, join } = require("path");
 const { readdirSync } = require("fs");
+import chalk from 'chalk';
+import axios from 'axios'
 import {mdiUpload,mdiDeleteOutline ,mdiPlus}	from "@mdi/js";
 const defaultOptions = {
 	prefix: "vc",
@@ -17,7 +19,29 @@ const defaultOptions = {
 		add: mdiPlus
 	}
 };
+//https://unpkg.com/vuetify-customized-fields@1.0.5/package.json
 export default function (moduleOptions) {
+const { nuxt} = this;
+	
+	this.nuxt.hook('listen', async function (server, { port }) {
+		const latestVersion = await axios.get('https://unpkg.com/vuetify-customized-fields/package.json').then((response) => {
+			return response.data.version;
+		});
+		// get the version from the package.json
+		const packageJson = require("./package.json");
+		const version = packageJson.version;
+		// compare the versions
+		if (version !== latestVersion) {
+			//message to the console red background and white text using chalk package
+			nuxt.options.cli.badgeMessages.push('vuetify-custom-fields: ' + chalk.red('new version available'));
+			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.red(version)+ ' Latest version: ' + chalk.green(latestVersion) );
+		} else {
+			//message to the console green background and white text using chalk package
+			nuxt.options.cli.badgeMessages.push(chalk.white('vuetify-custom-fields') + chalk.green(' up to date'));
+			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.green(version));
+		}	
+	  })
+	
 	// get all options for the module
 	const options = {
 		...defaultOptions,
