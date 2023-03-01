@@ -10,14 +10,16 @@ import File from "./File.vue";
 import Input from "./Input.vue";
 import Label from "./Label.vue";
 import Password from "./Password.vue";
-import Radio from "./Autocomplete.vue";
-import Select from "./Autocomplete.vue";
+import Radio from "./Radio.vue";
+import Select from "./Select.vue";
 import Textarea from "./Textarea.vue";
 import TextField from "./TextField.vue";
 import Upload from "./Upload.vue";
 import Users from "./Users.vue";
 import Wysiwyg from "./Wysiwyg.vue";
 import Youtube from "./Youtube.vue";
+import Legend from "./Legend.vue";
+import Phone from "./Phone.vue";
 
 export default {
 	Autocomplete,
@@ -39,4 +41,6 @@ export default {
 	Users,
 	Wysiwyg,
 	Youtube,
+	Legend,
+	Phone,
 };

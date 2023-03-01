@@ -31,6 +31,11 @@ vuetifyCustomFields: {
 		flat: false,
 		outlined: false,
 	},
+	icons: {
+		upload: mdiUpload,
+		delete: mdiDeleteOutline,
+		add: mdiPlus
+	}
 }
 ```
 ## Components List

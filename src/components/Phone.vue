@@ -2,34 +2,33 @@
 	<v-input
 		class="phone-number-container d-flex align-start fill-width"
 		dir="ltr"
-		:value="{ code, number, iso }"
+		:value="valueAsString"
 		:class="{ 'is-focused': ($refs.number && $refs.number.isFocused) || ($refs.code && $refs.code.isFocused) }"
-		:rules="[isValid]"
+		:rules="[...rules, isValid]"
+		:label="label"
 	>
 		<v-autocomplete
 			ref="code"
-			v-model="localCode"
+			v-model="localCodeAndIso"
 			dir="rtl"
 			class="code-field flex-grow-0 primary--text"
-			:label="label"
+			:label="$t('common.phone-code')"
 			style="width: auto; max-width: 130px"
 			:class="{ 'v-input--is-focused': $refs.number && $refs.number.isFocused }"
 			:items="countryCallingCode"
+			item-value="iso"
 			return-object
 			:auto-select-first="true"
 			:menu-props="{ dense: true }"
 			:loading="isLoading"
-			:outlined="outlined"
-			:dense="dense"
+			v-bind="keyPropsBus"
 			hide-details
-			:error="$refs.number && $refs.number.hasError && $refs.number.hasState"
-			filled
-			rounded
-			flat
+			single-line
 			@click:clear="codeCleared"
 			@change="switchToNumber"
 			@keyup="ifEnter"
 		>
+			<!-- :error="$refs.number && $refs.number.hasError && $refs.number.hasState" -->
 			<template #selection="{ item }">
 				<span class="rounded mx-1" size="25">
 					<v-img width="30" height="20" :src="'/flag-icons/flags/4x3/' + item.iso.toLowerCase() + '.svg'" class="rounded" />
@@ -57,14 +56,10 @@
 			:class="{ 'v-input--is-focused': $refs.code && $refs.code.isFocused }"
 			:hint="selectCountryFirst"
 			hide-details
-			:outlined="outlined"
-			:dense="dense"
-			:placeholder="example"
-			:error-messages="errorMessages"
+			single-line
 			:prepend-inner-icon="$vuetify.icons.values.phone"
-			filled
-			rounded
-			flat
+			v-bind="{ ...propsBus, rules: [], label: example || $t('common.please-select-country') }"
+			:disabled="!localCode"
 			@keypress="onlyNumberKey"
 			@input="pasteHandler"
 			@paste="pasteHandler"
@@ -80,46 +75,34 @@ import { getName, registerLocale } from "i18n-iso-countries";
 
 registerLocale(require("i18n-iso-countries/langs/en.json"));
 registerLocale(require("i18n-iso-countries/langs/ar.json"));
-
+import field from "../mixins/field";
 export default {
-	// mixins: [settings],
+	mixins: [field],
+	data() {
+		return {
+			iso: null,
+			code: null,
+			number: null,
+			isLoading: false,
+			valueAsString: null,
+		};
+	},
 	props: {
-		code: {
-			type: [String],
-			default: null,
-		},
-		number: {
-			type: [String],
-			default: null,
-		},
-		iso: {
-			type: [String],
-			default: null,
-		},
-		label: {
-			type: String,
-			default() {
-				return this.$t("fields.phoneNumber.number");
-			},
-		},
 		keyRules: {
 			type: Array,
 			default() {
-				return [this.$rules.required(this.$t("fields.phoneNumber.keyAlt"))];
+				return [
+					/*this.$rules.required(this.$t("fields.phoneNumber.keyAlt"))*/
+				];
 			},
 		},
 		numberRules: {
 			type: Array,
 			default() {
 				return [
-					this.$rules.required(this.$t("fields.phoneNumber.number")),
-					this.$rules.minLength(this.$t("fields.phoneNumber.number"), 7),
+					/*this.$rules.required(this.$t("fields.phoneNumber.number")), this.$rules.minLength(this.$t("fields.phoneNumber.number"), 7)*/
 				];
 			},
-		},
-		errorMessages: {
-			type: [String, Array],
-			default: null,
 		},
 		extendRules: {
 			type: Array,
@@ -133,28 +116,30 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		returnObject: {
+			type: Boolean,
+			default: true,
+		},
 	},
-	data() {
-		return {
-			isLoading: false,
-		};
-	},
+
 	computed: {
-		localCode: {
+		localCodeAndIso: {
 			get() {
-				// console.log(this.countryCallingCode);
-				const object = this.countryCallingCode.find((c) => {
-					// console.log(c.iso);
-					// console.log(this.iso);
-
-					return c.iso === this.iso;
-				});
-
-				return object;
+				return { code: this.localCode, iso: this.localIso };
 			},
 			set(v) {
-				this.$emit("update:code", v ? v.code : null);
-				this.$emit("update:iso", v ? v.iso : null);
+				this.localCode = v ? v.code : null;
+				this.localIso = v ? v.iso : null;
+			},
+		},
+		localCode: {
+			get() {
+				return this.code;
+			},
+			set(code) {
+				this.$emit("update:code", code);
+
+				this.localValue = { ...this.localValueObject, code };
 			},
 		},
 		localNumber: {
@@ -166,8 +151,44 @@ export default {
 					v = v.substr(1);
 				}
 				this.$emit("update:number", v);
+				this.localValue = { ...this.localValueObject, number: v };
 			},
 		},
+		localIso: {
+			get() {
+				return this.iso;
+			},
+			set(iso) {
+				this.$emit("update:iso", iso);
+				this.localValue = { ...this.localValueObject, iso };
+			},
+		},
+
+		localValueObject: {
+			get() {
+				return { code: this.localCode, number: this.localNumber, iso: this.localIso };
+			},
+			set(v) {
+				this.localValue = v;
+			},
+		},
+
+		localValue: {
+			get() {
+				return this.value;
+			},
+			set(v) {
+				const { code, number, iso } = v;
+				this.iso = iso;
+				this.code = code;
+				this.number = number;
+				this.$emit("input", v);
+				const str = `+${code ? code : ""}${number ? number : ""}`;
+				this.valueAsString = str;
+				this.$emit("value-as-string", this.valueAsString);
+			},
+		},
+
 		countries() {
 			return getCountries();
 		},
@@ -175,18 +196,14 @@ export default {
 		countryCallingCode() {
 			return this.countries
 				.map((iso) => {
-					// const v = countryCodes[key];
-					// console.log(v);
 					const code = getCountryCallingCode(iso);
 					return {
 						name: getName(iso, this.$i18n.locale, { select: "official" }) || iso,
-						// ...v,
+
 						text: code + " " + getName(iso, "en", { select: "official" }) || iso,
-						// (i18nCountries.getName(v.alpha2, this.locale) || v.name) +
-						// ` ${v.countryCallingCodes[0]} `, // for search purpose
+
 						code,
-						// flag: this.flag(v.alpha3),
-						// value: i, // must be unique, country calling codes are not unique
+
 						iso,
 					};
 				})
@@ -199,58 +216,42 @@ export default {
 					}
 					return 0;
 				});
-
-			// (
-			//     this.$store.state.initial.allCountries
-			//         // .filter((v) => {
-			//         //     return Array.isArray(v.countryCallingCodes) && v.countryCallingCodes.length;
-			//         // })
-			//         .map((v, i) => {
-			//             return {
-			//                 // name: i18nCountries.getName(v.alpha2, this.locale) || v.name,
-			//                 ...v,
-			//                 text: v.dialingCode + " " + v.label[this.locale],
-			//                 // (i18nCountries.getName(v.alpha2, this.locale) || v.name) +
-			//                 // ` ${v.countryCallingCodes[0]} `, // for search purpose
-			//                 code: v.dialingCode,
-			//                 // flag: this.flag(v.alpha3),
-			//                 // value: i, // must be unique, country calling codes are not unique
-			//                 iso: v.iso_a2,
-			//             };
-			//         })
-			// );
-			// .sort((a, b) => (a.text > b.text ? 1 : b.text > a.text ? -1 : 0))
 		},
 		selectCountryFirst() {
-			if (!this.code) {
+			if (!this.localCode) {
 				return this.$t("errors.selectCountryFirst");
 			} else {
 				return null;
 			}
 		},
 		isValid() {
-			console.log("validating:", "+" + this.code + this.number, this.iso);
-			if (this.number) {
+			console.log("validating:", "+" + this.localCode + this.localNumber, this.localIso);
+			if (this.localNumber) {
 				// console.log("validating:", "+" + v.code + v.number, v.iso);
-				return isValidPhoneNumber("+" + this.code + this.number, this.iso) || this.$t("errors.number-not-matching-country");
+				return isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) || this.$t("errors.number-not-matching-country");
 			} else {
 				return true;
 			}
 		},
 		example() {
-			return this.iso ? "Example: " + getExampleNumber(this.iso, examples)?.nationalNumber || null : null;
+			return this.localIso ? "Example: " + getExampleNumber(this.localIso, examples)?.nationalNumber || null : null;
+		},
+		keyPropsBus() {
+			//filter label key out from the returned object
+			const { label, ...rest } = this.propsBus;
+			return rest;
 		},
 	},
 
 	watch: {
-		iso: {
-			immediate: true,
-			handler(k, before) {
-				if (!this.code && this.localCode) {
-					this.$emit("update:code", this.localCode.code);
-				}
-			},
-		},
+		// iso: {
+		// 	immediate: true,
+		// 	handler(k, before) {
+		// 		if (!this.code && this.localCode) {
+		// 			this.$emit("update:code", this.localCode.code);
+		// 		}
+		// 	},
+		// },
 		// locale: {
 		//     // immediate: true,
 		//     handler(lang) {
@@ -314,5 +315,121 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "@/assets/phoneNumber.scss";
+.phone-number-container {
+	direction: ltr;
+	margin-bottom: 8px;
+	position: relative;
+	& > .v-input__control {
+		& > .v-input__slot {
+			& > .v-label {
+				left: -14px !important;
+				right: auto !important;
+				position: absolute !important;
+				z-index: 1;
+				//&.v-text-field .v-label--active {
+				max-width: 133%;
+				transform: translateY(-18px) scale(0.75);
+				pointer-events: auto;
+				//}
+			}
+		}
+	}
+	&.is-focused {
+		label {
+			color: var(--v-primary-base);
+		}
+	}
+	.v-select__selections {
+		flex-wrap: nowrap;
+		direction: ltr;
+	}
+	.v-autocomplete.v-select input {
+		min-width: 0;
+	}
+	&:hover > .v-input__control > .v-input__slot .v-input:not(.v-input--is-focused) .v-input__slot {
+		fieldset {
+			color: rgba(0, 0, 0, 0.86) !important;
+		}
+	}
+	.code-field .v-input__slot {
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+		// background-color: #fff !important;
+		fieldset {
+			// background-color: #fafafa;
+		}
+	}
+	.number-field {
+		direction: rtl;
+		position: unset !important;
+		.v-input__slot {
+			border-top-left-radius: 0 !important;
+			border-bottom-left-radius: 0 !important;
+			// background-color: #fff !important;
+			padding: 0 !important;
+			fieldset {
+				border-left-width: 0 !important;
+
+				legend {
+					margin-right: 24px; //icon width
+					margin-left: auto; //for firefox
+				}
+			}
+			input {
+				// text-align: left;
+				direction: ltr;
+			}
+			label {
+				right: -4px !important;
+			}
+		}
+	}
+}
+.v-application--is-ltr .phone-number-container {
+	.code-field .v-input__slot {
+		fieldset {
+			// background-color: #fafafa;
+			border-right-width: 0 !important;
+		}
+	}
+	.number-field {
+		direction: ltr;
+		.v-input__slot {
+			border-top-left-radius: 0 !important;
+			border-bottom-left-radius: 0 !important;
+			// background-color: #fff !important;
+			fieldset {
+				border-left-width: 0 !important;
+
+				legend {
+					margin-left: 24px; //icon width
+					margin-right: auto; //for firefox
+				}
+			}
+		}
+
+		label {
+			left: 0 !important;
+		}
+	}
+}
+.v-application--is-rtl .phone-number-container {
+	.code-field .v-input__slot {
+		fieldset {
+			// background-color: #fafafa;
+			border-right-width: 0 !important;
+		}
+	}
+	.number-field {
+		.v-input__slot {
+			fieldset {
+				legend {
+				}
+			}
+		}
+
+		label {
+		}
+	}
+}
 </style>

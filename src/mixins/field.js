@@ -1,10 +1,13 @@
 const options = JSON.parse(`<%= JSON.stringify(options) %>`);
+// import { Legend } from "../components";
 export default {
 	fetchOnServer: false,
-
+	// components: {
+	// 	fieldLegend:Legend,
+	// }, not working
 	props: {
 		value: {
-			type: [String, Number],
+			type: [String, Number, Array, Object, Boolean],
 			default: null,
 		},
 		items: {
@@ -42,6 +45,7 @@ export default {
 				flat: options.style.flat,
 				outlined: options.style.outlined,
 			},
+			options,
 		};
 	},
 	async fetch() {

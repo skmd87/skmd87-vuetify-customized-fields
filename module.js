@@ -1,6 +1,7 @@
 // module.js
 const { resolve, join } = require("path");
 const { readdirSync } = require("fs");
+import {mdiUpload,mdiDeleteOutline ,mdiPlus}	from "@mdi/js";
 const defaultOptions = {
 	prefix: "vc",
 	style: {
@@ -8,8 +9,13 @@ const defaultOptions = {
 		filled: false,
 		rounded: false,
 		flat: false,
-		outlined: false,
+		outlined: false,		
 	},
+	icons: {
+		upload: mdiUpload,
+		delete: mdiDeleteOutline,
+		add: mdiPlus
+	}
 };
 export default function (moduleOptions) {
 	// get all options for the module
@@ -43,4 +49,6 @@ export default function (moduleOptions) {
 		}
 	}
 }
+
+
 module.exports.meta = require("./package.json");
