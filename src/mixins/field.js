@@ -34,10 +34,15 @@ export default {
 			type: [Array],
 			default: () => [],
 		},
+		apiSearch: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
 			apiItems: [],
+			searchInput: null,
 			defaultStyle: {
 				dense: options.style.dense,
 				filled: options.style.filled,
@@ -50,7 +55,14 @@ export default {
 	},
 	async fetch() {
 		if (this.api) {
-			this.apiItems = await this.$axios.$getOnce(this.api);
+			this.apiItems = await this.$axios.$getOnce(this.api, {
+				params: this.apiParams,
+			});
+		}
+	},
+	watch: {
+		searchInput() {
+			this.$fetch();
 		}
 	},
 	computed: {
@@ -76,6 +88,14 @@ export default {
 				...this.defaultStyle,
 				...this.$attrs,
 			};
+		},
+		apiParams() {
+			const params = {};
+			if (this.apiSearch) {
+				params.search = this.searchInput;
+			}
+
+			return params;
 		},
 	},
 };

@@ -1,16 +1,9 @@
 <template>
-	<component
-		v-bind="propsBus"
-		v-model="localValue"
-		:label="label || $t('common.country')"
-		api="/v1/lookups/countries"
-		v-on="$listeners"
-		:is="`${options.prefix}-autocomplete`"
-	>
+	<v-text-field v-model="localValue" v-bind="propsBus" v-on="$listeners" type="number">
 		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
 			<slot :name="name" v-bind="item"></slot>
 		</template>
-	</component>
+	</v-text-field>
 </template>
 <script>
 import field from "../mixins/field";

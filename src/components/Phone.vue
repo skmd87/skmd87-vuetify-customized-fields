@@ -183,9 +183,8 @@ export default {
 				this.code = code;
 				this.number = number;
 				this.$emit("input", v);
-				const str = `+${code ? code : ""}${number ? number : ""}`;
-				this.valueAsString = str;
-				this.$emit("value-as-string", this.valueAsString);
+
+				this.valueAsString = this.formatString(v);
 			},
 		},
 
@@ -242,22 +241,22 @@ export default {
 			return rest;
 		},
 	},
-
 	watch: {
-		// iso: {
-		// 	immediate: true,
-		// 	handler(k, before) {
-		// 		if (!this.code && this.localCode) {
-		// 			this.$emit("update:code", this.localCode.code);
-		// 		}
-		// 	},
-		// },
-		// locale: {
-		//     // immediate: true,
-		//     handler(lang) {
-		//         // i18nCountries.registerLocale(require(`i18n-iso-countries/langs/${lang}.json`));
-		//     },
-		// },
+		localValue: {
+			deep: true,
+			immediate: true,
+			handler(v) {
+				//make sure data is synced
+				if (this.iso !== v.iso) this.iso = v.iso;
+				if (this.code !== v.code) this.code = v.code;
+				if (this.number !== v.number) this.number = v.number;
+
+				this.valueAsString = this.formatString(v);
+			},
+		},
+		valueAsString(v) {
+			this.$emit("input", v);
+		},
 	},
 	// beforeCreate() {
 	//     if (process.browser) console.log(this.$i18n);
@@ -310,6 +309,9 @@ export default {
 			if (e.keyCode === 13) {
 				this.switchToNumber();
 			}
+		},
+		formatString({ code, number, iso }) {
+			return `+${code ? code : ""}${number ? number : ""}`;
 		},
 	},
 };

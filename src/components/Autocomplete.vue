@@ -1,5 +1,5 @@
 <template>
-	<v-autocomplete v-model="localValue" v-bind="propsBus" v-on="$listeners">
+	<v-autocomplete v-model="localValue" v-bind="propsBus" :search-input.sync="searchInput" v-on="$listeners">
 		<template v-if="selectAll" #prepend-item>
 			<v-list-item ripple @mousedown.prevent @click="toggle">
 				<v-list-item-action>

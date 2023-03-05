@@ -17,6 +17,11 @@ const defaultOptions = {
 		upload: mdiUpload,
 		delete: mdiDeleteOutline,
 		add: mdiPlus
+	},
+	api: {
+		countries: "/v1/lookups/countries",
+		currencies: "/v1/lookups/currencies",
+		provinces: "/v1/lookups/provinces",
 	}
 };
 //https://unpkg.com/vuetify-customized-fields@1.0.5/package.json
