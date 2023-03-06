@@ -255,7 +255,7 @@ export default {
 			},
 		},
 		valueAsString(v) {
-			this.$emit("input", v);
+			this.$emit("input-string", v);
 		},
 	},
 	// beforeCreate() {
