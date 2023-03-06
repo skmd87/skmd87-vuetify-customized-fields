@@ -247,6 +247,7 @@ export default {
 			immediate: true,
 			handler(v) {
 				//make sure data is synced
+				if (!v) return;
 				if (this.iso !== v.iso) this.iso = v.iso;
 				if (this.code !== v.code) this.code = v.code;
 				if (this.number !== v.number) this.number = v.number;
