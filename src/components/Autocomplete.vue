@@ -13,8 +13,8 @@
 			</v-list-item>
 			<v-divider class="mt-2"></v-divider>
 		</template>
-		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
-			<slot :name="name" v-bind="item"></slot>
+		<template v-for="(slot, name) in $scopedSlots" :slot="name">
+			<slot :name="name"></slot>
 		</template>
 	</v-autocomplete>
 </template>
