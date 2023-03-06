@@ -9,8 +9,5 @@
 import field from "../mixins/field";
 export default {
 	mixins: [field],
-	mounted() {
-		console.log("sssssssl", this.$scopedSlots);
-	},
 };
 </script>
