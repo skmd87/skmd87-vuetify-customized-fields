@@ -15,9 +15,9 @@
 					@focus="focusHandler"
 					@blur="blurHandler"
 				>
-				<template v-for="(slot, name) in $scopedSlots" #[name]="item">
-					<slot :name="name" v-bind="item"></slot>
-				</template>
+					<template v-for="(slot, name) in $scopedSlots" #[name]="item">
+						<slot :name="name" v-bind="item"></slot>
+					</template>
 				</v-text-field>
 				<v-sheet height="4">
 					<v-progress-linear v-show="showTooltip" :value="progress" :color="color" rounded></v-progress-linear>
@@ -53,9 +53,10 @@
 </template>
 
 <script>
+import field from "../mixins/field.js";
 export default {
 	name: "Password",
-
+	mixins: [field],
 	props: {
 		value: {
 			type: [String],
@@ -115,10 +116,7 @@ export default {
 			return strength;
 		},
 		hasAnyError() {
-			return (
-				(this.hasLowerCase && this.hasUpperCase && this.hasNumber && this.hasSpecial && this.hasLength) ||
-				"Please enter a valid password"
-			);
+			return (this.hasLowerCase && this.hasUpperCase && this.hasNumber && this.hasSpecial && this.hasLength) || "Please enter a valid password";
 		},
 		color() {
 			return ["error", "error", "warning", "warning", "success"][Math.floor(this.progress / 20) - 1];
