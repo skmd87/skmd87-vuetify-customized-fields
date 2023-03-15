@@ -1,22 +1,13 @@
 <template>
 	<v-autocomplete v-model="localValue" v-bind="propsBus" :search-input.sync="searchInput" v-on="$listeners">
-		<template v-if="selectAll" #prepend-item>
-			<v-list-item ripple @mousedown.prevent @click="toggle">
-				<v-list-item-action>
-					<v-icon :color="localValue.length > 0 ? 'primary' : ''">
-						{{ icon }}
-					</v-icon>
-				</v-list-item-action>
-				<v-list-item-content>
-					<v-list-item-title> Select All </v-list-item-title>
-				</v-list-item-content>
-			</v-list-item>
-			<v-divider class="mt-2"></v-divider>
-		</template>
-		<template v-for="(slot, name) in $scopedSlots" :slot="name">
+		
+		<template v-for="(slot, name) in $slots" :slot="name">
 			<slot :name="name"></slot>
 		</template>
-	</v-autocomplete>
+		<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+			<slot :name="name" v-bind="slotData"></slot>		
+		</template>
+		</v-autocomplete>
 </template>
 <script>
 import field from "../mixins/field";
@@ -52,5 +43,6 @@ export default {
 			});
 		},
 	},
+
 };
 </script>

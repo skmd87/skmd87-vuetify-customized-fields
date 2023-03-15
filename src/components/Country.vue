@@ -7,8 +7,11 @@
 		v-on="$listeners"
 		:is="`${options.prefix}-autocomplete`"
 	>
-		<template v-for="(slot, name) in $scopedSlots" #[name]="item">
-			<slot :name="name" v-bind="item"></slot>
+		<template v-for="(slot, name) in $slots" :slot="name">
+			<slot :name="name"></slot>
+		</template>
+		<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+			<slot :name="name" v-bind="slotData"></slot>		
 		</template>
 	</component>
 </template>
