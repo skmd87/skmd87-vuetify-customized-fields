@@ -38,6 +38,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		maxWidth: {
+			//percentage or px
+			type: [String, Number],
+			default: null,
+		},
 	},
 	data() {
 		return {
@@ -77,12 +82,28 @@ export default {
 		localItems() {
 			return this.apiItems?.length > 0 ? this.apiItems : this.items || [];
 		},
+		calculatedMaxWidth() {
+			//check if it has unit and if not assume its px
+			// remove all number from maxWidth
+			const unit = String(this.maxWidth).replace(/[0-9]/g, "");
+			// if unit is empty then assume px
+			if (unit === "") {
+				return `${this.maxWidth}px`;
+			}
+			return this.maxWidth;
+		 },
+		style() {
+			return {
+				maxWidth: this.calculatedMaxWidth,
+			}	
+		},
 		propsBus() {
 			return {
 				items: this.localItems,
 				rules: this.rules,
 				label: this.label,
 				error: this.error,
+				style: this.style,
 				errorMessages: this.errorMessages,
 				loading: this.$fetchState?.pending,
 				...this.defaultStyle,

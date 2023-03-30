@@ -78,7 +78,7 @@
 					</v-col>
 				</template>
 				<v-col v-if="remainingAllowed" key="add-file">
-					<v-card color="rgba(0, 0, 0, 0.06)" flat class="d-flex justify-center align-center" :width="100" :height="100">
+					<v-card color="rgba(0, 0, 0, 0.06)" flat class="d-flex justify-center align-center" :width="width" :height="width">
 						<v-btn width="100%" height="100%" plain :loading="loading" @click="upload">
 							<div class="d-flex flex-column justify-center align-center">
 								<v-icon x-large>{{ options.icons.add }}</v-icon>

@@ -3,17 +3,20 @@
 		class="phone-number-container d-flex align-start fill-width"
 		dir="ltr"
 		:value="valueAsString"
-		:class="{ 'is-focused': ($refs.number && $refs.number.isFocused) || ($refs.code && $refs.code.isFocused) }"
+		:class="{
+			'is-focused': ($refs.number && $refs.number.isFocused) || ($refs.code && $refs.code.isFocused),
+			'v-text-field--outlined': propsBus.outlined !== undefined,
+			'v-input--dense': propsBus.dense !== undefined,
+		}"
 		:rules="[...rules, isValid]"
 		:label="label"
+		ref="input"
 	>
 		<v-autocomplete
 			ref="code"
 			v-model="localCodeAndIso"
 			dir="rtl"
 			class="code-field flex-grow-0 primary--text"
-			:label="$t('common.phone-code')"
-			style="width: auto; max-width: 130px"
 			:class="{ 'v-input--is-focused': $refs.number && $refs.number.isFocused }"
 			:items="countryCallingCode"
 			item-value="iso"
@@ -107,14 +110,6 @@ export default {
 		extendRules: {
 			type: Array,
 			default: () => [],
-		},
-		outlined: {
-			type: Boolean,
-			default: false,
-		},
-		dense: {
-			type: Boolean,
-			default: false,
 		},
 		returnObject: {
 			type: Boolean,
@@ -227,7 +222,10 @@ export default {
 			console.log("validating:", "+" + this.localCode + this.localNumber, this.localIso);
 			if (this.localNumber) {
 				// console.log("validating:", "+" + v.code + v.number, v.iso);
-				return isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) || this.$t("errors.number-not-matching-country");
+				return (
+					isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) ||
+					this.$t("errors.number-not-matching-country")
+				);
 			} else {
 				return true;
 			}
@@ -239,6 +237,10 @@ export default {
 			//filter label key out from the returned object
 			const { label, ...rest } = this.propsBus;
 			return rest;
+		},
+		legendWidth() {
+			// same as the width of the label of the key field using dom
+			return this.$refs.code.$el.querySelector("label").offsetWidth;
 		},
 	},
 	watch: {
@@ -259,26 +261,7 @@ export default {
 			this.$emit("input-string", v);
 		},
 	},
-	// beforeCreate() {
-	//     if (process.browser) console.log(this.$i18n);
-	//     this.$i18n.locales.forEach((locale) => {
-	//         // i18nCountries.registerLocale(require(`i18n-iso-countries/langs/${locale.code}.json`));
-	//     });
-	// },
-	mounted() {
-		// if (this.$store.state.initial.allCountries.length) {
-		// 	return;
-		// }
-		// this.isLoading = true;
-		// this.$axios
-		// 	.$get("countries?classified=0")
-		// 	.then((resp) => {
-		// 		this.$store.commit("initial/setAllCountries", resp.responseData);
-		// 	})
-		// 	.finally(() => {
-		// 		this.isLoading = false;
-		// 	});
-	},
+
 	methods: {
 		codeCleared() {
 			this.localCode = null;
@@ -314,6 +297,21 @@ export default {
 		formatString({ code, number, iso }) {
 			return `+${code ? code : ""}${number ? number : ""}`;
 		},
+	},
+	mounted() {
+		console.log("ref", this.$refs.input.$refs.label);
+		const labelStyle = window.getComputedStyle(this.$refs.input.$refs.label);
+
+		const labelWidth = parseInt(labelStyle.width) - 16;
+
+		const legend = this.$refs.code.$refs["input-slot"].querySelector("legend");
+
+		//set legend width as labelWidth
+		legend.style.minWidth = `${labelWidth}px`;
+		// setInterval(() => {
+		// 	legend.style.width = `${labelWidth}px`;
+		// }, 1000);
+		console.dir(legend);
 	},
 };
 </script>
@@ -354,12 +352,15 @@ export default {
 			color: rgba(0, 0, 0, 0.86) !important;
 		}
 	}
-	.code-field .v-input__slot {
-		border-top-right-radius: 0 !important;
-		border-bottom-right-radius: 0 !important;
-		// background-color: #fff !important;
-		fieldset {
-			// background-color: #fafafa;
+	.code-field {
+		max-width: 130px;
+		.v-input__slot {
+			border-top-right-radius: 0 !important;
+			border-bottom-right-radius: 0 !important;
+			// background-color: #fff !important;
+			fieldset {
+				// background-color: #fafafa;
+			}
 		}
 	}
 	.number-field {
@@ -413,6 +414,23 @@ export default {
 
 		label {
 			left: 0 !important;
+		}
+	}
+
+	&.v-text-field--outlined > .v-input__control > .v-input__slot {
+		& > .v-label {
+			left: -6px !important;
+			//background-color: #fff;
+			padding: 0 4px;
+			top: 10px;
+		}
+	}
+	&.v-text-field--outlined.v-input--dense > .v-input__control > .v-input__slot {
+		& > .v-label {
+			left: 0px !important;
+			//background-color: #fff;
+			padding: 0 4px;
+			top: 10px;
 		}
 	}
 }

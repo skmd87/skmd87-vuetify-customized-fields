@@ -1,3 +1,40 @@
 {
-    "nuxt.isNuxtApp": false
+    "nuxt.isNuxtApp": true,
+    "workbench.colorCustomizations": {
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#636363",
+        "titleBar.activeBackground": "#636363",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#636363",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "vetur.format.defaultFormatterOptions": {
+        "js-beautify-html": {
+            "wrap_attributes": "force-expand-multiline"
+        },
+        "prettyhtml": {
+            "printWidth": 100,
+            "singleQuote": false,
+            "wrapAttributes": false,
+            "sortAttributes": false
+        }
+    },
+    "vetur.format.defaultFormatter.less": "none",
+    "vetur.format.defaultFormatter.css": "prettier",
+    "vetur.format.defaultFormatter.html": "prettier",
+    "vetur.format.defaultFormatter.postcss": "prettier",
+    "vetur.format.defaultFormatter.js": "prettier",
+    "vetur.format.defaultFormatter.scss": "prettier",
+    "vetur.format.defaultFormatter.stylus": "stylus-supremacy",
+    "vetur.format.defaultFormatter.ts": "prettier",
+    "vetur.format.options.tabSize": 2,
+    "vetur.format.options.useTabs": false,
+    "vetur.format.scriptInitialIndent": false,
+    "vetur.format.styleInitialIndent": false,
+    "vetur.underline.refValue": false,
+    "vetur.validation.interpolation": false,
+    "vetur.validation.script": false,
+    "vetur.validation.style": false,
+    "vetur.validation.template": false,
+    "vetur.validation.templateProps": false,
 }

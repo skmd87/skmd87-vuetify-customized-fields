@@ -1,6 +1,6 @@
 <template>
-	<div class="mb-5" :class="'password-' + _uid">
-		<v-tooltip right :value="showTooltip">
+	<div :class="'password-' + _uid">
+		<v-tooltip top :value="showTooltip" >
 			<template #activator="{ on }">
 				<v-text-field
 					v-bind="propsBus"
@@ -14,41 +14,46 @@
 					@click:append="showPassword = !showPassword"
 					@focus="focusHandler"
 					@blur="blurHandler"
+					:loading="true"
 				>
 					<template v-for="(slot, name) in $slots" :slot="name">
-			<slot :name="name"></slot>
-		</template>
-		<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-			<slot :name="name" v-bind="slotData"></slot>		
-		</template>
+						<slot :name="name"></slot>
+					</template>
+					<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+						<slot :name="name" v-bind="slotData"></slot>		
+					</template>
+
+					<template #progress>
+						<v-sheet height="4" color="transparent" class="absolute" style="bottom:8px;left:4px;right:4px">
+								<v-progress-linear v-show="showTooltip" :value="progress" :color="color" rounded></v-progress-linear>
+							</v-sheet>
+					</template>
 				</v-text-field>
-				<v-sheet height="4">
-					<v-progress-linear v-show="showTooltip" :value="progress" :color="color" rounded></v-progress-linear>
-				</v-sheet>
+				
 			</template>
 			<div>
-				<v-icon v-if="hasLowerCase" left color="success">mdi-check</v-icon>
-				<v-icon v-else left color="error">mdi-close</v-icon>
+				<v-icon v-if="hasLowerCase" left color="success">{{mdiCheck}}</v-icon>
+				<v-icon v-else left color="error">{{mdiClose }}</v-icon>
 				<span>Lowercase</span>
 			</div>
 			<div>
-				<v-icon v-if="hasUpperCase" left color="success">mdi-check</v-icon>
-				<v-icon v-else left color="error">mdi-close</v-icon>
+				<v-icon v-if="hasUpperCase" left color="success">{{mdiCheck}}</v-icon>
+				<v-icon v-else left color="error">{{mdiClose }}</v-icon>
 				<span>Uppercase</span>
 			</div>
 			<div>
-				<v-icon v-if="hasNumber" left color="success">mdi-check</v-icon>
-				<v-icon v-else left color="error">mdi-close</v-icon>
+				<v-icon v-if="hasNumber" left color="success">{{mdiCheck}}</v-icon>
+				<v-icon v-else left color="error">{{mdiClose }}</v-icon>
 				<span> Number (0-9)</span>
 			</div>
 			<div>
-				<v-icon v-if="hasSpecial" left color="success">mdi-check</v-icon>
-				<v-icon v-else left color="error">mdi-close</v-icon>
+				<v-icon v-if="hasSpecial" left color="success">{{mdiCheck}}</v-icon>
+				<v-icon v-else left color="error">{{mdiClose }}</v-icon>
 				<span> Special Character (!@#$%^&*)</span>
 			</div>
 			<div>
-				<v-icon v-if="hasLength" left color="success">mdi-check</v-icon>
-				<v-icon v-else left color="error">mdi-close</v-icon>
+				<v-icon v-if="hasLength" left color="success">{{mdiCheck}}</v-icon>
+				<v-icon v-else left color="error">{{mdiClose}}</v-icon>
 				<span> At least 8 Character</span>
 			</div>
 		</v-tooltip>
@@ -57,6 +62,7 @@
 
 <script>
 import field from "../mixins/field.js";
+import { mdiEye,mdiEyeOff, mdiClose,mdiCheck, } from "@mdi/js";
 export default {
 	name: "Password",
 	mixins: [field],
@@ -71,6 +77,7 @@ export default {
 			showPassword: false,
 			userInputs: ["1", "2", "3", "4", "5"],
 			showTooltip: false,
+			mdiEye,mdiEyeOff, mdiClose,mdiCheck
 		};
 	},
 	computed: {

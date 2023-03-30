@@ -12,5 +12,6 @@
 import field from "../mixins/field";
 export default {
 	mixins: [field],
+	
 };
 </script>
