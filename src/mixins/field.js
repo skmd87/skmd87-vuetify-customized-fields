@@ -1,10 +1,13 @@
 const options = JSON.parse(`<%= JSON.stringify(options) %>`);
-// import { Legend } from "../components";
+import CustomLabel from "../components/CustomLabel";
+console.log("🚀 ~ file: field.js:4 ~ CustomLabel:", CustomLabel)
+
 export default {
+	inheritAttrs: false,
 	fetchOnServer: false,
-	// components: {
-	// 	fieldLegend:Legend,
-	// }, not working
+	components: {
+		CustomLabel
+	}, 
 	props: {
 		value: {
 			type: [String, Number, Array, Object, Boolean],
@@ -43,6 +46,14 @@ export default {
 			type: [String, Number],
 			default: null,
 		},
+		labelRow: {
+			type: [Boolean],
+			default: false,
+		},
+		labelColumn: {
+			type: [Boolean],
+			default: false,
+		}
 	},
 	data() {
 		return {
@@ -101,13 +112,14 @@ export default {
 			return {
 				items: this.localItems,
 				rules: this.rules,
-				label: this.label,
+				label: this.customLabelPosition ? undefined : this.label,
 				error: this.error,
 				style: this.style,
 				errorMessages: this.errorMessages,
 				loading: this.$fetchState?.pending,
 				...this.defaultStyle,
 				...this.$attrs,
+				//class:{...this.$attrs.class,'flex-grow-1':true}
 			};
 		},
 		apiParams() {
@@ -118,5 +130,8 @@ export default {
 
 			return params;
 		},
+		customLabelPosition() {
+			return this.labelRow || this.labelColumn;
+		}
 	},
 };
