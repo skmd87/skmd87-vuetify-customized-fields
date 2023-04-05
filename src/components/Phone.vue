@@ -53,7 +53,6 @@
 			ref="number"
 			v-model="localNumber"
 			class="number-field text-left"
-			dir="rtl"
 			type="tel"
 			style="min-width: 55%"
 			:class="{ 'v-input--is-focused': $refs.code && $refs.code.isFocused }"
@@ -419,7 +418,7 @@ export default {
 
 	&.v-text-field--outlined > .v-input__control > .v-input__slot {
 		& > .v-label {
-			left: -6px !important;
+			left: -0 !important;
 			//background-color: #fff;
 			padding: 0 4px;
 			top: 10px;

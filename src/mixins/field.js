@@ -1,6 +1,5 @@
 const options = JSON.parse(`<%= JSON.stringify(options) %>`);
 import CustomLabel from "../components/CustomLabel";
-console.log("🚀 ~ file: field.js:4 ~ CustomLabel:", CustomLabel)
 
 export default {
 	inheritAttrs: false,
