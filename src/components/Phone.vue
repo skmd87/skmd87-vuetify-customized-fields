@@ -1,4 +1,16 @@
 <template>
+	<!-- <vc-text-field v-model="localValue" v-bind="propsBus">
+							<template #prepend-inner>
+								<v-menu offset-y>
+									<template #activator="{}">
+										<v-sheet color="transparent" width="100">
+											<input v-model="test" type="text" width="100%" />
+										</v-sheet>
+									</template>
+									<v-card><v-list-item> +962 </v-list-item></v-card>
+								</v-menu>
+							</template>
+						</vc-text-field> -->
 	<v-input
 		class="phone-number-container d-flex align-start fill-width"
 		dir="ltr"
@@ -15,7 +27,6 @@
 		<v-autocomplete
 			ref="code"
 			v-model="localCodeAndIso"
-			dir="rtl"
 			class="code-field flex-grow-0 primary--text"
 			:class="{ 'v-input--is-focused': $refs.number && $refs.number.isFocused }"
 			:items="countryCallingCode"
@@ -322,7 +333,7 @@ export default {
 	& > .v-input__control {
 		& > .v-input__slot {
 			& > .v-label {
-				left: -14px !important;
+				// left: -14px !important;
 				right: auto !important;
 				position: absolute !important;
 				z-index: 1;
@@ -361,6 +372,12 @@ export default {
 				// background-color: #fafafa;
 			}
 		}
+		fieldset {
+			padding-left: 8px;
+			legend {
+				text-align: left;
+			}
+		}
 	}
 	.number-field {
 		direction: rtl;
@@ -383,7 +400,7 @@ export default {
 				direction: ltr;
 			}
 			label {
-				right: -4px !important;
+				//right: -4px !important;
 			}
 		}
 	}
