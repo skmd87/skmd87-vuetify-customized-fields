@@ -66,7 +66,7 @@ const { nuxt} = this;
 		});
 	}
 	// sync all of the files and folders to revelant places in the nuxt build dir (.nuxt/)
-	const foldersToSync = ["src/plugins", "src/components", "src/mixins"];
+	const foldersToSync = ["src/plugins", "src/components", "src/mixins","src/images/flags"];
 	for (const pathString of foldersToSync) {
 		const path = resolve(__dirname, pathString);
 		for (const file of readdirSync(path)) {

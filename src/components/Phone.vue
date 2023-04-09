@@ -1,138 +1,69 @@
 <template>
-	<!-- <vc-text-field v-model="localValue" v-bind="propsBus">
-							<template #prepend-inner>
-								<v-menu offset-y>
-									<template #activator="{}">
-										<v-sheet color="transparent" width="100">
-											<input v-model="test" type="text" width="100%" />
-										</v-sheet>
-									</template>
-									<v-card><v-list-item> +962 </v-list-item></v-card>
-								</v-menu>
-							</template>
-						</vc-text-field> -->
-	<v-input
-		class="phone-number-container d-flex align-start fill-width"
-		dir="ltr"
-		:value="valueAsString"
-		:class="{
-			'is-focused': ($refs.number && $refs.number.isFocused) || ($refs.code && $refs.code.isFocused),
-			'v-text-field--outlined': propsBus.outlined !== undefined,
-			'v-input--dense': propsBus.dense !== undefined,
-		}"
-		:rules="[...rules, isValid]"
-		:label="label"
-		ref="input"
-	>
-		<v-autocomplete
-			ref="code"
-			v-model="localCodeAndIso"
-			class="code-field flex-grow-0 primary--text"
-			:class="{ 'v-input--is-focused': $refs.number && $refs.number.isFocused }"
-			:items="countryCallingCode"
-			item-value="iso"
-			return-object
-			:auto-select-first="true"
-			:menu-props="{ dense: true }"
-			:loading="isLoading"
-			v-bind="keyPropsBus"
-			hide-details
-			single-line
-			@click:clear="codeCleared"
-			@change="switchToNumber"
-			@keyup="ifEnter"
-		>
-			<!-- :error="$refs.number && $refs.number.hasError && $refs.number.hasState" -->
-			<template #selection="{ item }">
-				<span class="rounded mx-1" size="25">
-					<v-img width="30" height="20" :src="'/flag-icons/flags/4x3/' + item.iso.toLowerCase() + '.svg'" class="rounded" />
-				</span>
-				<span dir="ltr">+{{ item.code }}</span>
-			</template>
-			<template #item="{ item }">
-				<v-list-item-icon>
-					<v-img width="30" height="20" :src="'/flag-icons/flags/4x3/' + item.iso.toLowerCase() + '.svg'" class="rounded" />
-				</v-list-item-icon>
-				<v-list-item-content>
-					<v-list-item-title>
-						{{ item.name }} <span dir="ltr">(+{{ item.code }})</span>
-					</v-list-item-title>
-				</v-list-item-content>
-			</template>
-		</v-autocomplete>
-		<v-text-field
-			ref="number"
-			v-model="localNumber"
-			class="number-field text-left"
-			type="tel"
-			style="min-width: 55%"
-			:class="{ 'v-input--is-focused': $refs.code && $refs.code.isFocused }"
-			:hint="selectCountryFirst"
-			hide-details
-			single-line
-			:prepend-inner-icon="$vuetify.icons.values.phone"
-			v-bind="{ ...propsBus, rules: [], label: example || $t('common.please-select-country') }"
-			:disabled="!localCode"
-			@keypress="onlyNumberKey"
-			@input="pasteHandler"
-			@paste="pasteHandler"
-		></v-text-field>
-	</v-input>
+	<v-text-field v-model="localNumber" v-bind="propsBus" class="vc-phone" type="number" hideSpinButtons :placeholder="example">
+		<template v-slot:prepend-inner>
+			<v-autocomplete
+				v-model="localCodeAndIso"
+				placeholder="Code"
+				:items="countries"
+				style="max-width: 130px"
+				background-color="transparent"
+				hide-details
+				solo
+				flat
+				dense
+				class="mt-0"
+			>
+				<template #selection="{ item }">
+					<span class="mx-1" size="25">
+						<v-img width="30" height="20" :src="item.flag" class="rounded" />
+					</span>
+					<span dir="ltr">+{{ item.code }}</span>
+				</template>
+
+				<template #prepend-item>
+					<v-list-item>
+						<v-text-field autofocus clearable dense solo v-model="searchModel" label="Search"></v-text-field>
+					</v-list-item>
+				</template>
+				<template #item="{ item }">
+					<v-list-item-icon>
+						<v-img width="30" height="20" :src="item.flag" class="rounded" />
+					</v-list-item-icon>
+					<v-list-item-content>
+						<v-list-item-title>
+							{{ item.name }} <span dir="ltr">(+{{ item.code }})</span>
+						</v-list-item-title>
+					</v-list-item-content>
+				</template>
+			</v-autocomplete>
+		</template>
+	</v-text-field>
 </template>
 
 <script>
-// import countryCodes from "country-data";
+import field from "../mixins/field";
 import { getCountries, getCountryCallingCode, isValidPhoneNumber, getExampleNumber } from "libphonenumber-js";
 import examples from "libphonenumber-js/mobile/examples";
 import { getName, registerLocale } from "i18n-iso-countries";
+import path from "path";
 
-registerLocale(require("i18n-iso-countries/langs/en.json"));
-registerLocale(require("i18n-iso-countries/langs/ar.json"));
-import field from "../mixins/field";
 export default {
 	mixins: [field],
-	data() {
-		return {
-			iso: null,
-			code: null,
-			number: null,
-			isLoading: false,
-			valueAsString: null,
-		};
-	},
-	props: {
-		keyRules: {
-			type: Array,
-			default() {
-				return [
-					/*this.$rules.required(this.$t("fields.phoneNumber.keyAlt"))*/
-				];
-			},
-		},
-		numberRules: {
-			type: Array,
-			default() {
-				return [
-					/*this.$rules.required(this.$t("fields.phoneNumber.number")), this.$rules.minLength(this.$t("fields.phoneNumber.number"), 7)*/
-				];
-			},
-		},
-		extendRules: {
-			type: Array,
-			default: () => [],
-		},
-		returnObject: {
-			type: Boolean,
-			default: true,
-		},
-	},
-
+	data: () => ({
+		searchModel: "",
+		iso: null,
+		code: null,
+		number: null,
+		isLoading: false,
+		valueAsString: null,
+	}),
 	computed: {
 		localCodeAndIso: {
 			get() {
 				return { code: this.localCode, iso: this.localIso };
 			},
 			set(v) {
+				console.log(v);
 				this.localCode = v ? v.code : null;
 				this.localIso = v ? v.iso : null;
 			},
@@ -193,85 +124,41 @@ export default {
 			},
 		},
 
-		countries() {
+		countriesISO() {
 			return getCountries();
 		},
+		countries() {
+			return this.countriesISO.map((iso) => {
+				const code = getCountryCallingCode(iso);
 
-		countryCallingCode() {
-			return this.countries
-				.map((iso) => {
-					const code = getCountryCallingCode(iso);
-					return {
-						name: getName(iso, this.$i18n.locale, { select: "official" }) || iso,
-
-						text: code + " " + getName(iso, "en", { select: "official" }) || iso,
-
+				return {
+					name: getName(iso, this.$i18n.locale, { select: "official" }) || iso,
+					text: code + " " + getName(iso, "en", { select: "official" }) || iso,
+					code,
+					iso,
+					flag: iso ? require(`../images/flags/${iso.toLowerCase()}.svg`) : null,
+					value: {
 						code,
-
 						iso,
-					};
-				})
-				.sort(function (a, b) {
-					if (a.text < b.text) {
-						return -1;
-					}
-					if (a.text > b.text) {
-						return 1;
-					}
-					return 0;
-				});
-		},
-		selectCountryFirst() {
-			if (!this.localCode) {
-				return this.$t("errors.selectCountryFirst");
-			} else {
-				return null;
-			}
-		},
-		isValid() {
-			console.log("validating:", "+" + this.localCode + this.localNumber, this.localIso);
-			if (this.localNumber) {
-				// console.log("validating:", "+" + v.code + v.number, v.iso);
-				return (
-					isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) ||
-					this.$t("errors.number-not-matching-country")
-				);
-			} else {
-				return true;
-			}
+					},
+
+					//test: path.resolve(`~/src/images/flags/4x3/${iso.toLowerCase()}.svg`),
+				};
+			});
+			// .sort(function (a, b) {
+			// 	if (a.text < b.text) {
+			// 		return -1;
+			// 	}
+			// 	if (a.text > b.text) {
+			// 		return 1;
+			// 	}
+			// 	return 0;
+			// });
 		},
 		example() {
 			return this.localIso ? "Example: " + getExampleNumber(this.localIso, examples)?.nationalNumber || null : null;
 		},
-		keyPropsBus() {
-			//filter label key out from the returned object
-			const { label, ...rest } = this.propsBus;
-			return rest;
-		},
-		legendWidth() {
-			// same as the width of the label of the key field using dom
-			return this.$refs.code.$el.querySelector("label").offsetWidth;
-		},
 	},
-	watch: {
-		localValue: {
-			deep: true,
-			immediate: true,
-			handler(v) {
-				//make sure data is synced
-				if (!v) return;
-				if (this.iso !== v.iso) this.iso = v.iso;
-				if (this.code !== v.code) this.code = v.code;
-				if (this.number !== v.number) this.number = v.number;
-
-				this.valueAsString = this.formatString(v);
-			},
-		},
-		valueAsString(v) {
-			this.$emit("input-string", v);
-		},
-	},
-
 	methods: {
 		codeCleared() {
 			this.localCode = null;
@@ -307,166 +194,38 @@ export default {
 		formatString({ code, number, iso }) {
 			return `+${code ? code : ""}${number ? number : ""}`;
 		},
-	},
-	mounted() {
-		console.log("ref", this.$refs.input.$refs.label);
-		const labelStyle = window.getComputedStyle(this.$refs.input.$refs.label);
-
-		const labelWidth = parseInt(labelStyle.width) - 16;
-
-		const legend = this.$refs.code.$refs["input-slot"].querySelector("legend");
-
-		//set legend width as labelWidth
-		legend.style.minWidth = `${labelWidth}px`;
-		// setInterval(() => {
-		// 	legend.style.width = `${labelWidth}px`;
-		// }, 1000);
-		console.dir(legend);
+		valueComparator(a, b) {
+			console.log("a", a);
+			console.log("b", b);
+			return a.code === b.code && a.iso === b.iso;
+		},
 	},
 };
 </script>
+
 <style lang="scss">
-.phone-number-container {
-	direction: ltr;
-	margin-bottom: 8px;
-	position: relative;
-	& > .v-input__control {
-		& > .v-input__slot {
-			& > .v-label {
-				// left: -14px !important;
-				right: auto !important;
-				position: absolute !important;
-				z-index: 1;
-				//&.v-text-field .v-label--active {
-				max-width: 133%;
-				transform: translateY(-18px) scale(0.75);
-				pointer-events: auto;
-				//}
-			}
-		}
+.vc-phone {
+	&.v-text-field--full-width .v-input__prepend-outer,
+	&.v-text-field--full-width .v-input__prepend-inner,
+	&.v-text-field--full-width .v-input__append-inner,
+	&.v-text-field--full-width .v-input__append-outer,
+	&.v-text-field--enclosed .v-input__prepend-outer,
+	&.v-text-field--enclosed .v-input__prepend-inner,
+	&.v-text-field--enclosed .v-input__append-inner,
+	&.v-text-field--enclosed .v-input__append-outer {
+		margin: auto 0;
 	}
-	&.is-focused {
-		label {
-			color: var(--v-primary-base);
-		}
-	}
-	.v-select__selections {
-		flex-wrap: nowrap;
-		direction: ltr;
-	}
-	.v-autocomplete.v-select input {
-		min-width: 0;
-	}
-	&:hover > .v-input__control > .v-input__slot .v-input:not(.v-input--is-focused) .v-input__slot {
-		fieldset {
-			color: rgba(0, 0, 0, 0.86) !important;
-		}
-	}
-	.code-field {
-		max-width: 130px;
-		.v-input__slot {
-			border-top-right-radius: 0 !important;
-			border-bottom-right-radius: 0 !important;
-			// background-color: #fff !important;
-			fieldset {
-				// background-color: #fafafa;
-			}
-		}
-		fieldset {
-			padding-left: 8px;
-			legend {
-				text-align: left;
-			}
-		}
-	}
-	.number-field {
-		direction: rtl;
-		position: unset !important;
-		.v-input__slot {
-			border-top-left-radius: 0 !important;
-			border-bottom-left-radius: 0 !important;
-			// background-color: #fff !important;
-			padding: 0 !important;
-			fieldset {
-				border-left-width: 0 !important;
-
-				legend {
-					margin-right: 24px; //icon width
-					margin-left: auto; //for firefox
-				}
-			}
-			input {
-				// text-align: left;
-				direction: ltr;
-			}
-			label {
-				//right: -4px !important;
-			}
-		}
-	}
-}
-.v-application--is-ltr .phone-number-container {
-	.code-field .v-input__slot {
-		fieldset {
-			// background-color: #fafafa;
-			border-right-width: 0 !important;
-		}
-	}
-	.number-field {
-		direction: ltr;
-		.v-input__slot {
-			border-top-left-radius: 0 !important;
-			border-bottom-left-radius: 0 !important;
-			// background-color: #fff !important;
-			fieldset {
-				border-left-width: 0 !important;
-
-				legend {
-					margin-left: 24px; //icon width
-					margin-right: auto; //for firefox
-				}
-			}
-		}
-
-		label {
-			left: 0 !important;
-		}
-	}
-
-	&.v-text-field--outlined > .v-input__control > .v-input__slot {
-		& > .v-label {
-			left: -0 !important;
-			//background-color: #fff;
-			padding: 0 4px;
-			top: 10px;
-		}
-	}
-	&.v-text-field--outlined.v-input--dense > .v-input__control > .v-input__slot {
-		& > .v-label {
-			left: 0px !important;
-			//background-color: #fff;
-			padding: 0 4px;
-			top: 10px;
-		}
-	}
-}
-.v-application--is-rtl .phone-number-container {
-	.code-field .v-input__slot {
-		fieldset {
-			// background-color: #fafafa;
-			border-right-width: 0 !important;
-		}
-	}
-	.number-field {
-		.v-input__slot {
-			fieldset {
-				legend {
-				}
-			}
-		}
-
-		label {
-		}
-	}
+	// .v-input__prepend-inner {
+	// 	position: relative;
+	// 	width: 130px;
+	// 	div {
+	// 		position: absolute;
+	// 		top: 50%;
+	// 		left: 0;
+	// 		right: 0;
+	// 		transform: translate(0, -50%);
+	// 		z-index: 1;
+	// 	}
+	// }
 }
 </style>
