@@ -7,31 +7,43 @@
 				:items="countries"
 				style="max-width: 130px"
 				background-color="transparent"
+				:search-input="searchModel"
+				no-filter
 				hide-details
 				solo
 				flat
 				dense
 				class="mt-0"
+				ref="autocomplete"
+				@keydown.enter.prevent="handleEnter"
 			>
 				<template #selection="{ item }">
 					<span class="mx-1" size="25">
-						<v-img width="30" height="20" :src="item.flag" class="rounded" />
+						<v-img width="30" height="20" :src="item.meta.flag" class="rounded" />
 					</span>
-					<span dir="ltr">+{{ item.code }}</span>
+					<span dir="ltr">+{{ item.value.code }}</span>
 				</template>
 
 				<template #prepend-item>
 					<v-list-item>
-						<v-text-field autofocus clearable dense solo v-model="searchModel" label="Search"></v-text-field>
+						<v-text-field
+							autofocus
+							clearable
+							dense
+							solo
+							v-model="searchModel"
+							@input="highlightFirstItem"
+							label="Search"
+						></v-text-field>
 					</v-list-item>
 				</template>
 				<template #item="{ item }">
 					<v-list-item-icon>
-						<v-img width="30" height="20" :src="item.flag" class="rounded" />
+						<v-img width="30" height="20" :src="item.meta.flag" class="rounded" />
 					</v-list-item-icon>
 					<v-list-item-content>
 						<v-list-item-title>
-							{{ item.name }} <span dir="ltr">(+{{ item.code }})</span>
+							{{ item.text }} <span dir="ltr">(+{{ item.value.code }})</span>
 						</v-list-item-title>
 					</v-list-item-content>
 				</template>
@@ -128,32 +140,41 @@ export default {
 			return getCountries();
 		},
 		countries() {
-			return this.countriesISO.map((iso) => {
-				const code = getCountryCallingCode(iso);
+			const countries = this.countriesISO
+				.map((iso) => {
+					const code = getCountryCallingCode(iso);
 
-				return {
-					name: getName(iso, this.$i18n.locale, { select: "official" }) || iso,
-					text: code + " " + getName(iso, "en", { select: "official" }) || iso,
-					code,
-					iso,
-					flag: iso ? require(`../images/flags/${iso.toLowerCase()}.svg`) : null,
-					value: {
-						code,
-						iso,
-					},
+					return {
+						text: getName(iso, this.$i18n.locale, { select: "official" }) || iso,
+						value: {
+							code,
+							iso,
+						},
+						meta: {
+							flag: iso ? require(`../images/flags/${iso.toLowerCase()}.svg`) : null,
+						},
 
-					//test: path.resolve(`~/src/images/flags/4x3/${iso.toLowerCase()}.svg`),
-				};
-			});
-			// .sort(function (a, b) {
-			// 	if (a.text < b.text) {
-			// 		return -1;
-			// 	}
-			// 	if (a.text > b.text) {
-			// 		return 1;
-			// 	}
-			// 	return 0;
-			// });
+						//test: path.resolve(`~/src/images/flags/4x3/${iso.toLowerCase()}.svg`),
+					};
+				})
+				.sort(function (a, b) {
+					if (a.text < b.text) {
+						return -1;
+					}
+					if (a.text > b.text) {
+						return 1;
+					}
+					return 0;
+				});
+
+			if (this.searchModel) {
+				const loweredSearchModel = this.searchModel.toLowerCase();
+				return countries.filter(
+					(c) => c.text.toLowerCase().includes(loweredSearchModel) || c.value.code.includes(loweredSearchModel)
+				);
+			} else {
+				return countries;
+			}
 		},
 		example() {
 			return this.localIso ? "Example: " + getExampleNumber(this.localIso, examples)?.nationalNumber || null : null;
@@ -198,6 +219,32 @@ export default {
 			console.log("a", a);
 			console.log("b", b);
 			return a.code === b.code && a.iso === b.iso;
+		},
+		handleEnter() {
+			if (this.$refs.autocomplete && this.$refs.autocomplete.items.length > 0) {
+				const highlightedIndex = this.$refs.autocomplete.highlightedIndex;
+				if (highlightedIndex !== null && highlightedIndex >= 0) {
+					this.selectedItem = this.$refs.autocomplete.items[highlightedIndex];
+				} else {
+					this.selectedItem = this.$refs.autocomplete.items[0];
+				}
+			}
+		},
+		highlightFirstItem() {
+			if (this.$refs.autocomplete) {
+				this.$nextTick(() => {
+					// const menuItems = this.$refs.autocomplete.menuItems;
+					// if (menuItems && menuItems.length > 0) {
+					// 	this.$refs.autocomplete.activateMenu();
+					// 	this.$refs.autocomplete.setMenuIndex(0);
+					// }
+					console.log(
+						"test",
+						this.$refs.autocomplete.$refs.menu.$children[0].$children[0].$children[0].$children[1].$attrs.tabindex
+					);
+					this.$refs.autocomplete.setMenuIndex(0);
+				});
+			}
 		},
 	},
 };
