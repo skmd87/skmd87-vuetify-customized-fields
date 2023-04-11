@@ -45,7 +45,9 @@ const { nuxt} = this;
 			nuxt.options.cli.badgeMessages.push(chalk.white('vuetify-custom-fields') + chalk.green(' up to date'));
 			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.green(version));
 		}	
-	  })
+	})
+	
+	this.options.build.transpile.push('tiptap-vuetify');
 	
 	// get all options for the module
 	const options = {
@@ -57,7 +59,7 @@ const { nuxt} = this;
 	if (!options.namespace) options.namespace = "vuetifyCustomFields";
 	const { namespace } = options;
 	// add all of the initial plugins
-	const pluginsToSync = ["src/components/index.js", "src/plugins/index.js", "src/debug.js"];
+	const pluginsToSync = ["src/components/index.js", "src/plugins/index.js", "src/debug.js", "src/plugins/tiptap.client.js"];
 	for (const pathString of pluginsToSync) {
 		this.addPlugin({
 			src: resolve(__dirname, pathString),

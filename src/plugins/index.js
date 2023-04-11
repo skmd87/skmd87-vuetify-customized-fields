@@ -9,6 +9,6 @@ const options = JSON.parse(`<%= JSON.stringify(options) %>`);
 
 
 Object.entries(vuetifyCustomizedFields.default).forEach(([name, component]) => {
-
 	Vue.component(options.prefix + name, component);
 });
+
