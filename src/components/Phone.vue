@@ -3,6 +3,7 @@
 		<template v-slot:prepend-inner>
 			<v-autocomplete
 				v-model="localCodeAndIso"
+				dir="ltr"
 				placeholder="Code"
 				:items="countries"
 				style="max-width: 130px"
@@ -177,9 +178,30 @@ export default {
 			}
 		},
 		example() {
-			return this.localIso ? "Example: " + getExampleNumber(this.localIso, examples)?.nationalNumber || null : null;
+			return this.localIso
+				? this.$t("rules.phone-example", { phone: getExampleNumber(this.localIso, examples)?.nationalNumber }) || null
+				: null;
 		},
 	},
+	watch: {
+		localValue: {
+			deep: true,
+			immediate: true,
+			handler(v) {
+				//make sure data is synced
+				if (!v) return;
+				if (this.iso !== v.iso) this.iso = v.iso;
+				if (this.code !== v.code) this.code = v.code;
+				if (this.number !== v.number) this.number = v.number;
+
+				this.valueAsString = this.formatString(v);
+			},
+		},
+		valueAsString(v) {
+			this.$emit("input-string", v);
+		},
+	},
+
 	methods: {
 		codeCleared() {
 			this.localCode = null;
@@ -259,7 +281,8 @@ export default {
 	&.v-text-field--enclosed .v-input__prepend-outer,
 	&.v-text-field--enclosed .v-input__prepend-inner,
 	&.v-text-field--enclosed .v-input__append-inner,
-	&.v-text-field--enclosed .v-input__append-outer {
+	&.v-text-field--enclosed .v-input__append-outer,
+	&.v-text-field--enclosed.v-input--dense:not(.v-text-field--solo).v-text-field--outlined .v-input__prepend-inner {
 		margin: auto 0;
 	}
 	// .v-input__prepend-inner {
