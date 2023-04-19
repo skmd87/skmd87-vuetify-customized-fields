@@ -1,5 +1,5 @@
 <template>
-	<v-text-field v-model="localNumber" v-bind="propsBus" class="vc-phone" type="number" hideSpinButtons :placeholder="example">
+	<v-text-field v-model="localNumber" v-bind="adjustedPropsBus" class="vc-phone" type="number" hideSpinButtons :placeholder="example">
 		<template v-slot:prepend-inner>
 			<v-autocomplete
 				v-model="localCodeAndIso"
@@ -181,6 +181,23 @@ export default {
 			return this.localIso
 				? this.$t("rules.phone-example", { phone: getExampleNumber(this.localIso, examples)?.nationalNumber }) || null
 				: null;
+		},
+		isValid() {
+			console.log("validating:", "+" + this.localCode + this.localNumber, this.localIso);
+			if (this.localNumber) {
+				// console.log("validating:", "+" + v.code + v.number, v.iso);
+				return (
+					isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) ||
+					this.$t("errors.number-not-matching-country")
+				);
+			} else {
+				return true;
+			}
+		},
+		adjustedPropsBus() {
+			const props = { ...this.propsBus };
+			props.rules.push(this.isValid);
+			return props;
 		},
 	},
 	watch: {
