@@ -8,7 +8,7 @@
 					:dummy="on"
 					:append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
 					:type="showPassword ? 'text' : 'password'"
-					:rules="[$rules.required('password'), hasAnyError]"
+					:rules="calculatedRules"
 					:label="label || 'Password'"
 					counter
 					@click:append="showPassword = !showPassword"
@@ -142,6 +142,13 @@ export default {
 		},
 		color() {
 			return ["error", "error", "warning", "warning", "success"][Math.floor(this.progress / 20) - 1];
+		},
+		calculatedRules() {
+			const r = [...this.rules];
+			if (!this.noStrength) {
+				r.push(this.hasAnyError);
+			}
+			return r;
 		},
 	},
 	created() {},
