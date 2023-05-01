@@ -52,6 +52,10 @@ export default {
 		labelColumn: {
 			type: [Boolean],
 			default: false,
+		},
+		returnObject: {
+			type: [Boolean],
+			default: false,
 		}
 	},
 	data() {
@@ -114,6 +118,7 @@ export default {
 				label: this.customLabelPosition ? undefined : this.label,
 				error: this.error,
 				style: this.style,
+				returnObject: this.returnObject,
 				errorMessages: this.errorMessages,
 				loading: this.$fetchState?.pending,
 				...this.defaultStyle,
