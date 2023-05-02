@@ -15,7 +15,6 @@
 						@click:append="showPassword = !showPassword"
 						@focus="focusHandler"
 						@blur="blurHandler"
-						:loading="true"
 					>
 						<template v-for="(slot, name) in $slots" :slot="name">
 							<slot :name="name"></slot>
