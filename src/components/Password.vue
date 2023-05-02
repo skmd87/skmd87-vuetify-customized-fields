@@ -2,33 +2,32 @@
 	<div :class="'password-' + _uid">
 		<v-tooltip top :value="showTooltip">
 			<template #activator="{ on }">
-				<v-text-field
-					v-bind="propsBus"
-					v-model="localPassword"
-					:dummy="on"
-					:append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-					:type="showPassword ? 'text' : 'password'"
-					:rules="calculatedRules"
-					:label="label || 'Password'"
-					counter
-					@click:append="showPassword = !showPassword"
-					@focus="focusHandler"
-					@blur="blurHandler"
-					:loading="true"
-				>
-					<template v-for="(slot, name) in $slots" :slot="name">
-						<slot :name="name"></slot>
-					</template>
-					<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-						<slot :name="name" v-bind="slotData"></slot>
-					</template>
-
-					<template #progress>
-						<v-sheet height="4" color="transparent" class="absolute" style="bottom: 8px; left: 4px; right: 4px">
-							<v-progress-linear v-show="showTooltip" :value="progress" :color="color" rounded></v-progress-linear>
-						</v-sheet>
-					</template>
-				</v-text-field>
+				<div class="vc-password-container">
+					<v-text-field
+						v-bind="propsBus"
+						v-model="localPassword"
+						:dummy="on"
+						:append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+						:type="showPassword ? 'text' : 'password'"
+						:rules="calculatedRules"
+						:label="label || 'Password'"
+						counter
+						@click:append="showPassword = !showPassword"
+						@focus="focusHandler"
+						@blur="blurHandler"
+						:loading="true"
+					>
+						<template v-for="(slot, name) in $slots" :slot="name">
+							<slot :name="name"></slot>
+						</template>
+						<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+							<slot :name="name" v-bind="slotData"></slot>
+						</template>
+					</v-text-field>
+					<v-sheet height="4" color="transparent" class="strength-bar">
+						<v-progress-linear v-show="showTooltip" :value="progress" :color="color" rounded></v-progress-linear>
+					</v-sheet>
+				</div>
 			</template>
 			<template v-if="!noStrength">
 				<div>
@@ -178,5 +177,18 @@ export default {
 .Password {
 	max-width: 100% !important;
 	margin: 0 auto;
+}
+.vc-password-container {
+	position: relative;
+	.strength-bar {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 17px;
+	}
+
+	.v-text-field.v-input--dense ~ .strength-bar {
+		bottom: 13px;
+	}
 }
 </style>

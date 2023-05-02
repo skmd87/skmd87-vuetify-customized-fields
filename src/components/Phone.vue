@@ -183,16 +183,17 @@ export default {
 				: null;
 		},
 		isValid() {
-			console.log("validating:", "+" + this.localCode + this.localNumber, this.localIso);
-			if (this.localNumber) {
-				// console.log("validating:", "+" + v.code + v.number, v.iso);
-				return (
-					isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) ||
-					this.$t("errors.number-not-matching-country")
-				);
-			} else {
-				return true;
-			}
+			return () => {
+				if (this.localNumber) {
+					// console.log("validating:", "+" + v.code + v.number, v.iso);
+					return (
+						isValidPhoneNumber("+" + this.localCode + this.localNumber, this.localIso) ||
+						this.$t("errors.number-not-matching-country")
+					);
+				} else {
+					return true;
+				}
+			};
 		},
 		adjustedPropsBus() {
 			const props = { ...this.propsBus };
