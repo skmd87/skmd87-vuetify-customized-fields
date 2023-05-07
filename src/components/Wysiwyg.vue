@@ -7,10 +7,12 @@
 				<!-- Use the component in the right place of the template -->
 				<tiptap-vuetify
 					:key="key"
+					dir="rtl"
 					v-model="localValue"
 					:toolbar-attributes="toolbarProps"
 					:extensions="extensions"
 					:card-props="cardProps"
+					ref="tiptap"
 				/>
 			</ClientOnly>
 		</div>
@@ -38,10 +40,17 @@ import {
 	HorizontalRule,
 	History,
 } from "tiptap-vuetify";
+import TextDirection from "tiptap-text-direction-extension";
 import field from "../mixins/field";
 export default {
 	components: { TiptapVuetify },
 	mixins: [field],
+	props: {
+		dir: {
+			type: String,
+			default: "ltr",
+		},
+	},
 	data: () => ({
 		// declare extensions you want to use
 		extensions: [
@@ -54,6 +63,7 @@ export default {
 			ListItem,
 			BulletList,
 			OrderedList,
+			TextDirection,
 			[
 				Heading,
 				{
@@ -84,6 +94,16 @@ export default {
 		},
 		key() {
 			return `${this.theme}`;
+		},
+	},
+	watch: {
+		dir: {
+			immediately: true,
+			handler() {
+				this.$nextTick(() => {
+					this.$refs.tiptap.$refs.editor.commands.setTextDirection(this.dir);
+				});
+			},
 		},
 	},
 };

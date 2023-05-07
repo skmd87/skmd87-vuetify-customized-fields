@@ -32,27 +32,27 @@
 				<div>
 					<v-icon v-if="hasLowerCase" left color="success">{{ mdiCheck }}</v-icon>
 					<v-icon v-else left color="error">{{ mdiClose }}</v-icon>
-					<span>Lowercase</span>
+					<span>{{ $t("vc.lowercase") }}</span>
 				</div>
 				<div>
 					<v-icon v-if="hasUpperCase" left color="success">{{ mdiCheck }}</v-icon>
 					<v-icon v-else left color="error">{{ mdiClose }}</v-icon>
-					<span>Uppercase</span>
+					<span>{{ $t("vc.uppercase") }}</span>
 				</div>
 				<div>
 					<v-icon v-if="hasNumber" left color="success">{{ mdiCheck }}</v-icon>
 					<v-icon v-else left color="error">{{ mdiClose }}</v-icon>
-					<span> Number (0-9)</span>
+					<span>{{ $t("vc.number") }}</span>
 				</div>
 				<div>
 					<v-icon v-if="hasSpecial" left color="success">{{ mdiCheck }}</v-icon>
 					<v-icon v-else left color="error">{{ mdiClose }}</v-icon>
-					<span> Special Character (!@#$%^&*)</span>
+					<span> {{ $t("vc.special-char") }}</span>
 				</div>
 				<div>
 					<v-icon v-if="hasLength" left color="success">{{ mdiCheck }}</v-icon>
 					<v-icon v-else left color="error">{{ mdiClose }}</v-icon>
-					<span> At least 8 Character</span>
+					<span> {{ $t("vc.min-number-of-char", { minNumber: 8 }) }} </span>
 				</div>
 			</template>
 		</v-tooltip>
