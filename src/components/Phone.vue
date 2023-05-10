@@ -8,9 +8,10 @@
 				:items="countries"
 				style="max-width: 130px"
 				background-color="transparent"
-				:search-input="searchModel"
+				:search-input.sync="searchModel"
 				no-filter
 				hide-details
+				auto-select-first
 				solo
 				flat
 				dense
@@ -270,21 +271,15 @@ export default {
 				}
 			}
 		},
+
 		highlightFirstItem() {
-			if (this.$refs.autocomplete) {
-				this.$nextTick(() => {
-					// const menuItems = this.$refs.autocomplete.menuItems;
-					// if (menuItems && menuItems.length > 0) {
-					// 	this.$refs.autocomplete.activateMenu();
-					// 	this.$refs.autocomplete.setMenuIndex(0);
-					// }
-					console.log(
-						"test",
-						this.$refs.autocomplete.$refs.menu.$children[0].$children[0].$children[0].$children[1].$attrs.tabindex
-					);
-					this.$refs.autocomplete.setMenuIndex(0);
-				});
-			}
+			this.$nextTick(() => {
+				console.log(
+					"test",
+					this.$refs.autocomplete.$refs.menu /*.$children[0].$children[0].$children[0].$children[1].$attrs.tabindex*/
+				);
+				this.$refs.autocomplete.setMenuIndex(0);
+			});
 		},
 	},
 };
@@ -302,6 +297,9 @@ export default {
 	&.v-text-field--enclosed .v-input__append-outer,
 	&.v-text-field--enclosed.v-input--dense:not(.v-text-field--solo).v-text-field--outlined .v-input__prepend-inner {
 		margin: auto 0;
+	}
+	&.v-text-field > .v-input__control .v-input__prepend-inner .v-input__control {
+		min-height: unset !important;
 	}
 	// .v-input__prepend-inner {
 	// 	position: relative;

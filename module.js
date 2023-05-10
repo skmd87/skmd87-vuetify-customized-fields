@@ -38,11 +38,11 @@ const { nuxt} = this;
 		// compare the versions
 		if (version !== latestVersion) {
 			//message to the console red background and white text using chalk package
-			nuxt.options.cli.badgeMessages.push('vuetify-custom-fields: ' + chalk.red('new version available'));
+			nuxt.options.cli.badgeMessages.push('vuetify-customized-fields: ' + chalk.red('new version available'));
 			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.red(version)+ ' Latest version: ' + chalk.green(latestVersion) );
 		} else {
 			//message to the console green background and white text using chalk package
-			nuxt.options.cli.badgeMessages.push(chalk.white('vuetify-custom-fields') + chalk.green(' up to date'));
+			nuxt.options.cli.badgeMessages.push(chalk.white('vuetify-customized-fields') + chalk.green(' up to date'));
 			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.green(version));
 		}	
 	})

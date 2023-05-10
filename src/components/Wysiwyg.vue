@@ -1,7 +1,7 @@
 <template>
 	<v-input :value="localValue" :rules="rules" @click="$emit('focus')">
 		<div style="width: 100% !important">
-			<field-label>{{ label }}</field-label>
+			<custom-label :label="label" />
 
 			<ClientOnly>
 				<!-- Use the component in the right place of the template -->
@@ -40,7 +40,7 @@ import {
 	HorizontalRule,
 	History,
 } from "tiptap-vuetify";
-import TextDirection from "tiptap-text-direction-extension";
+import TextDirection from "tiptap-text-direction";
 import field from "../mixins/field";
 export default {
 	components: { TiptapVuetify },
@@ -50,41 +50,56 @@ export default {
 			type: String,
 			default: "ltr",
 		},
+		minHeight: {
+			type: [Number, String],
+			default: undefined,
+		},
+		maxHeight: {
+			type: [Number, String],
+			default: undefined,
+		},
 	},
-	data: () => ({
+	data() {
 		// declare extensions you want to use
-		extensions: [
-			History,
-			Blockquote,
-			Link,
-			Underline,
-			Strike,
-			Italic,
-			ListItem,
-			BulletList,
-			OrderedList,
-			TextDirection,
-			[
-				Heading,
-				{
-					options: {
-						levels: [2, 3],
+		return {
+			extensions: [
+				History,
+				Blockquote,
+				Link,
+				Underline,
+				Strike,
+				Italic,
+				ListItem,
+				BulletList,
+				OrderedList,
+
+				[
+					Heading,
+					{
+						options: {
+							levels: [2, 3],
+						},
 					},
-				},
+				],
+				Bold,
+				Code,
+				HorizontalRule,
+				Paragraph,
+				HardBreak,
+				// TextDirection.configure({
+				// 	types: ["heading", "paragraph"],
+				// }),
 			],
-			Bold,
-			Code,
-			HorizontalRule,
-			Paragraph,
-			HardBreak,
-		],
-	}),
+		};
+	},
 	computed: {
 		cardProps() {
 			return {
 				flat: true,
 				outlined: true,
 				elevation: 0,
+				minHeight: this.minHeight,
+				maxHeight: this.maxHeight,
 			};
 		},
 		toolbarProps() {
@@ -101,7 +116,7 @@ export default {
 			immediately: true,
 			handler() {
 				this.$nextTick(() => {
-					this.$refs.tiptap.$refs.editor.commands.setTextDirection(this.dir);
+					//	this.$refs.tiptap.$refs.editor.commands.setTextDirection(this.dir);
 				});
 			},
 		},
