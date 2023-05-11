@@ -115,7 +115,7 @@ export default {
 			return {
 				items: this.localItems,
 				rules: this.rules,
-				label: this.customLabelPosition ? undefined : this.label,
+				label: this.customLabelPosition ? undefined : this.computedLabel,
 				error: this.error,
 				style: this.style,
 				returnObject: this.returnObject,
@@ -136,6 +136,17 @@ export default {
 		},
 		customLabelPosition() {
 			return this.labelRow || this.labelColumn;
+		},
+		computedLabel() {
+			if(this.hasRequiredRule ){
+				return `${this.label} *`;
+			} else {
+				return this.label;
+			}
+		},
+		hasRequiredRule() {
+			console.log(this.rules)
+			return this.rules.find((rule) => rule.name === "required");
 		}
 	},
 };
