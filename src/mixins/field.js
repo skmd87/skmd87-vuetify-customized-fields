@@ -144,9 +144,8 @@ export default {
 				return this.label;
 			}
 		},
-		hasRequiredRule() {
-			console.log(this.rules)
-			return this.rules.find((rule) => rule.name === "required");
+		hasRequiredRule() {			
+			return Array.isArray(this.rules) && this.rules.find((rule) => rule.name === "required");
 		}
 	},
 };
