@@ -5,8 +5,8 @@ export default {
 	inheritAttrs: false,
 	fetchOnServer: false,
 	components: {
-		CustomLabel
-	}, 
+		CustomLabel,
+	},
 	props: {
 		value: {
 			type: [String, Number, Array, Object, Boolean],
@@ -56,7 +56,7 @@ export default {
 		returnObject: {
 			type: [Boolean],
 			default: false,
-		}
+		},
 	},
 	data() {
 		return {
@@ -82,7 +82,7 @@ export default {
 	watch: {
 		searchInput() {
 			this.$fetch();
-		}
+		},
 	},
 	computed: {
 		localValue: {
@@ -105,11 +105,11 @@ export default {
 				return `${this.maxWidth}px`;
 			}
 			return this.maxWidth;
-		 },
+		},
 		style() {
 			return {
 				maxWidth: this.calculatedMaxWidth,
-			}	
+			};
 		},
 		propsBus() {
 			return {
@@ -138,14 +138,14 @@ export default {
 			return this.labelRow || this.labelColumn;
 		},
 		computedLabel() {
-			if(this.hasRequiredRule ){
+			if (this.hasRequiredRule) {
 				return `${this.label} *`;
 			} else {
 				return this.label;
 			}
 		},
-		hasRequiredRule() {			
+		hasRequiredRule() {
 			return Array.isArray(this.rules) && this.rules.find((rule) => rule.name === "required");
-		}
+		},
 	},
 };

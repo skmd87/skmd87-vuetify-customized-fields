@@ -29,7 +29,7 @@
 									<v-card outlined width="100%" height="100%">
 										<v-img v-if="file.preview" :src="file.preview" :aspect-ratio="aspectRatio" :width="width">
 											<div
-												class="w-100 h-100 d-flex align-center justify-center"
+												class="w-100 fill-height d-flex align-center justify-center"
 												:class="{ 'is-uploading': file.uploading }"
 											>
 												<v-scale-transition appear mode="out-in">
@@ -93,7 +93,6 @@
 </template>
 
 <script>
-
 import mime from "mime-type/with-db";
 require("css-file-icons/build/css-file-icons.css");
 import field from "../mixins/field";
@@ -206,10 +205,6 @@ export default {
 		onFileChanged(e) {
 			for (let i = 0; e.target.files.length > i; i++) {
 				if (e.target.files[i] instanceof File) {
-					if (!this.loading) {
-						this.loading = true;
-					}
-
 					const ext = e.target.files[i].name.split(".").pop();
 					if (this.remainingAllowed) {
 						if (!this.types || this.types.includes(ext)) {
@@ -217,6 +212,7 @@ export default {
 
 							this.add(file);
 
+							this.files[file.name].uploading = true;
 							const formData = new FormData();
 							formData.append("file", file);
 							this.$axios
@@ -229,12 +225,11 @@ export default {
 								})
 								.then((resp) => {
 									this.files[file.name].uploading = false;
-
 									this.changeFileName(file.name, resp.file);
 								})
 								.catch((e) => {
 									this.del(file.name);
-
+									this.files[file.name].uploading = false;
 									this.genericErrorHandler(e);
 								});
 						}
@@ -261,7 +256,7 @@ export default {
 			this.$delete(this.files, oldKey);
 		},
 		getImageDimensions(file) {
-			return new Promise(function (resolve, reject) {
+			return new Promise(function (resolve) {
 				const i = new Image();
 				i.onload = function () {
 					resolve({ width: i.width, height: i.height });
@@ -323,7 +318,6 @@ export default {
 						this.add(file);
 					});
 				} else if (typeof this.internalValue === "string") {
-					console.log(JSON.stringify(this.internalValue));
 					this.add(this.internalValue);
 				}
 			}
