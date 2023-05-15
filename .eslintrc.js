@@ -8,8 +8,8 @@ module.exports = {
 		parser: "@babel/eslint-parser",
 		requireConfigFile: false,
 	},
-	extends: ["@nuxtjs", "plugin:nuxt/recommended", "prettier"],
-	plugins: [],
+	extends: ["plugin:vue/recommended", "eslint:recommended", "prettier", "plugin:prettier/recommended"],
+	plugins: ["nuxt"],
 	// add your custom rules here
 	rules: {
 		"vue/no-v-html": "off",
@@ -21,6 +21,7 @@ module.exports = {
 			},
 		],
 		"no-console": "off",
+		"vue/no-v-text-v-html-on-component": "off",
 		"vue/multi-word-component-names": "off",
 		"vue/valid-v-slot": ["error", { allowModifiers: true }],
 	},

@@ -39,7 +39,7 @@
 			<slot :name="name"></slot>
 		</template>
 		<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-			<slot :name="name" v-bind="slotData"></slot>		
+			<slot :name="name" v-bind="slotData"></slot>
 		</template>
 	</v-autocomplete>
 </template>
@@ -84,7 +84,7 @@ export default {
 		},
 	},
 	methods: {
-		search(value) {
+		search() {
 			// delay the fetch by 500 ms
 			clearTimeout(this.timeout);
 			this.timeout = setTimeout(() => {
@@ -98,4 +98,3 @@ export default {
 	},
 };
 </script>
-

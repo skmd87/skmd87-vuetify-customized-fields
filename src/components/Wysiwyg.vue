@@ -7,12 +7,12 @@
 				<!-- Use the component in the right place of the template -->
 				<tiptap-vuetify
 					:key="key"
-					dir="rtl"
+					ref="tiptap"
 					v-model="localValue"
+					dir="rtl"
 					:toolbar-attributes="toolbarProps"
 					:extensions="extensions"
 					:card-props="cardProps"
-					ref="tiptap"
 				/>
 			</ClientOnly>
 		</div>
@@ -40,7 +40,7 @@ import {
 	HorizontalRule,
 	History,
 } from "tiptap-vuetify";
-import TextDirection from "tiptap-text-direction";
+// import TextDirection from "tiptap-text-direction";
 import field from "../mixins/field";
 export default {
 	components: { TiptapVuetify },
