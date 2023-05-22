@@ -79,7 +79,7 @@
 				</template>
 				<v-col v-if="remainingAllowed" key="add-file">
 					<v-card light :color="color" flat class="d-flex justify-center align-center" :width="width" :height="width">
-						<v-btn width="100%" height="100%" plain :loading="loading" @click="upload">
+						<v-btn width="100%" height="100%" plain @click="upload">
 							<div class="d-flex flex-column justify-center align-center">
 								<v-icon x-large>{{ options.icons.add }}</v-icon>
 								<div class="my-1">{{ $t("common.upload") }}</div>

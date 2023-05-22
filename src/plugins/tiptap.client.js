@@ -1,10 +1,6 @@
-import Vue from 'vue'
-import { TiptapVuetifyPlugin } from 'tiptap-vuetify'
-import 'tiptap-vuetify/dist/main.css'
+// import Vue from "vue";
+// import VTiptap from "@peepi/vuetify-tiptap";
 
-export default ({ app,$vuetify }) => {
-  Vue.use(TiptapVuetifyPlugin, {
-    vuetify: app.vuetify,
-    iconsGroup: 'mdiSvg'
-  })
-}
+// export default ({ app, $vuetify }) => {
+// 	Vue.use(VTiptap);
+// };

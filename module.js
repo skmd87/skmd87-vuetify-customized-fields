@@ -1,9 +1,9 @@
 // module.js
 const { resolve, join } = require("path");
 const { readdirSync } = require("fs");
-import chalk from 'chalk';
-import axios from 'axios'
-import {mdiUpload,mdiDeleteOutline ,mdiPlus}	from "@mdi/js";
+import chalk from "chalk";
+import axios from "axios";
+import { mdiUpload, mdiDeleteOutline, mdiPlus } from "@mdi/js";
 const defaultOptions = {
 	prefix: "vc",
 	style: {
@@ -11,25 +11,25 @@ const defaultOptions = {
 		filled: false,
 		rounded: false,
 		flat: false,
-		outlined: false,		
+		outlined: false,
 	},
 	icons: {
 		upload: mdiUpload,
 		delete: mdiDeleteOutline,
-		add: mdiPlus
+		add: mdiPlus,
 	},
 	api: {
 		countries: "/v1/lookups/countries",
 		currencies: "/v1/lookups/currencies",
 		provinces: "/v1/lookups/provinces",
-	}
+	},
 };
 //https://unpkg.com/vuetify-customized-fields@1.0.5/package.json
 export default function (moduleOptions) {
-const { nuxt} = this;
-	
-	this.nuxt.hook('listen', async function (server, { port }) {
-		const latestVersion = await axios.get('https://unpkg.com/vuetify-customized-fields/package.json').then((response) => {
+	const { nuxt } = this;
+
+	this.nuxt.hook("listen", async function (server, { port }) {
+		const latestVersion = await axios.get("https://unpkg.com/vuetify-customized-fields/package.json").then((response) => {
 			return response.data.version;
 		});
 		// get the version from the package.json
@@ -38,17 +38,19 @@ const { nuxt} = this;
 		// compare the versions
 		if (version !== latestVersion) {
 			//message to the console red background and white text using chalk package
-			nuxt.options.cli.badgeMessages.push('vuetify-customized-fields: ' + chalk.red('new version available'));
-			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.red(version)+ ' Latest version: ' + chalk.green(latestVersion) );
+			nuxt.options.cli.badgeMessages.push("vuetify-customized-fields: " + chalk.red("new version available"));
+			nuxt.options.cli.badgeMessages.push(
+				"Current version: " + chalk.red(version) + " Latest version: " + chalk.green(latestVersion)
+			);
 		} else {
 			//message to the console green background and white text using chalk package
-			nuxt.options.cli.badgeMessages.push(chalk.white('vuetify-customized-fields') + chalk.green(' up to date'));
-			nuxt.options.cli.badgeMessages.push('Current version: ' + chalk.green(version));
-		}	
-	})
-	
-	this.options.build.transpile.push('tiptap-vuetify');
-	
+			nuxt.options.cli.badgeMessages.push(chalk.white("vuetify-customized-fields") + chalk.green(" up to date"));
+			nuxt.options.cli.badgeMessages.push("Current version: " + chalk.green(version));
+		}
+	});
+
+	// this.options.build.transpile.push("@peepi/vuetify-tiptap");
+
 	// get all options for the module
 	const options = {
 		...defaultOptions,
@@ -68,7 +70,7 @@ const { nuxt} = this;
 		});
 	}
 	// sync all of the files and folders to revelant places in the nuxt build dir (.nuxt/)
-	const foldersToSync = ["src/plugins", "src/components", "src/mixins","src/images/flags"];
+	const foldersToSync = ["src/plugins", "src/components", "src/mixins", "src/images/flags"];
 	for (const pathString of foldersToSync) {
 		const path = resolve(__dirname, pathString);
 		for (const file of readdirSync(path)) {
@@ -80,6 +82,5 @@ const { nuxt} = this;
 		}
 	}
 }
-
 
 module.exports.meta = require("./package.json");
