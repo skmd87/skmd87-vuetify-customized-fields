@@ -2,7 +2,7 @@
 	<client-only>
 		<v-input :value="localValue" class="vc-wysiwyg text-start rich-editor" :rules="rules">
 			<v-card min-height="200" outlined class="flex-grow-1 d-flex flex-column" color="t">
-				<v-toolbar v-if="editor" flat color="rgb(240, 240, 240)" class="toolbar flex-grow-0" dense>
+				<v-toolbar v-if="editor" flat height="auto" color="rgb(240, 240, 240)" class="toolbar flex-grow-0">
 					<template v-for="(btn, i) in toolbar">
 						<v-btn
 							v-if="btn.type === 'button'"
@@ -41,7 +41,12 @@
 				<v-card>
 					<v-card-title>{{ $t("common.link") }} </v-card-title>
 					<v-card-text>
-						<v-form v-model="isLinkFormValid"><v-text-field v-model="linkText" label="Text" /></v-form>
+						<v-form v-model="isLinkFormValid"
+							><v-text-field
+								v-model="linkText"
+								:rules="[$rules.required($t('common.url')), $rules.isValidURL($t('common.url'))]"
+								:label="$t('common.url')"
+						/></v-form>
 					</v-card-text>
 					<v-card-actions>
 						<v-btn text @click="linkModal = false">{{ $t("common.cancel") }}</v-btn>
@@ -357,8 +362,18 @@ export default {
 .ProseMirror-focused {
 	outline: none;
 }
+.vc-wysiwyg .toolbar {
+	min-height: 44px;
+}
 .vc-wysiwyg .toolbar .v-btn ~ .v-btn {
 	margin-inline-end: 4px;
+}
+.vc-wysiwyg .toolbar .v-toolbar__content {
+	flex-wrap: wrap;
+	padding: 8px;
+}
+.vc-wysiwyg .toolbar .v-toolbar__content > .v-btn:first-child {
+	margin: 0;
 }
 .ProseMirror ul,
 .ProseMirror ol {
