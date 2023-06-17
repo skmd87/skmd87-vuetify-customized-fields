@@ -28,7 +28,7 @@ const defaultOptions = {
 export default function (moduleOptions) {
 	const { nuxt } = this;
 
-	this.nuxt.hook("listen", async function (server, { port }) {
+	this.nuxt.hook("listen", async function (/*server, { port }*/) {
 		const latestVersion = await axios.get("https://unpkg.com/vuetify-customized-fields/package.json").then((response) => {
 			return response.data.version;
 		});

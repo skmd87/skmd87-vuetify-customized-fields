@@ -1,4 +1,3 @@
-
 // dynamic export default all .vue files in this folder
 const requireComponent = require.context(
 	// The relative path of the components folder
@@ -22,8 +21,6 @@ requireComponent.keys().forEach((fileName) => {
 
 	// Register component globally
 	components[componentName] = componentConfig.default || componentConfig;
-}
-);
-
+});
 
 export default components;

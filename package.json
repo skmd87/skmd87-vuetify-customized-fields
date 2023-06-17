@@ -24,7 +24,8 @@
     "i18n-iso-countries": "^7.5.0",
     "libphonenumber-js": "^1.10.26",
     "path": "^0.12.7",
-    "tiptap-text-direction-extension": "^1.0.7"
+    "tiptap-text-direction-extension": "^1.0.7",
+    "tiptap-vuetify": "^2.24.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
