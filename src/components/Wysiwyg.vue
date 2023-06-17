@@ -64,8 +64,7 @@
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import TextAlign from "@tiptap/extension-text-align";
-import TextDirection from "tiptap-text-direction";
-// import TextDirection from "tiptap-text-direction-extension";
+import TextDirection from "tiptap-text-direction-extension";
 import Link from "@tiptap/extension-link";
 import StarterKit from "@tiptap/starter-kit";
 import field from "../mixins/field";
