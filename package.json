@@ -1,6 +1,6 @@
 {
   "name": "vuetify-customized-fields",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "This is a customized version of vuetify form field to be used on nuxt",
   "main": "module.js",
   "scripts": {
