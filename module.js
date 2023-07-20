@@ -49,7 +49,7 @@ export default function (moduleOptions) {
 		}
 	});
 
-	// this.options.build.transpile.push("@peepi/vuetify-tiptap");
+	this.options.build.transpile.push("vuetify-datetime-picker");
 
 	// get all options for the module
 	const options = {
