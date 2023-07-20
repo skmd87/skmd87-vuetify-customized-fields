@@ -61,7 +61,13 @@ export default function (moduleOptions) {
 	if (!options.namespace) options.namespace = "vuetifyCustomFields";
 	const { namespace } = options;
 	// add all of the initial plugins
-	const pluginsToSync = ["src/components/index.js", "src/plugins/index.js", "src/debug.js", "src/plugins/tiptap.client.js"];
+	const pluginsToSync = [
+		"src/components/index.js",
+		"src/plugins/index.js",
+		"src/debug.js",
+		"src/plugins/tiptap.client.js",
+		"src/plugins/datetime.js",
+	];
 	for (const pathString of pluginsToSync) {
 		this.addPlugin({
 			src: resolve(__dirname, pathString),
