@@ -147,5 +147,8 @@ export default {
 		hasRequiredRule() {
 			return Array.isArray(this.rules) && this.rules.find((rule) => rule?.name === "required");
 		},
+		icons(){
+			return options.icons
+		}
 	},
 };

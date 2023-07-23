@@ -184,7 +184,7 @@ export default {
 		value: {
 			handler(now, before) {
 				this.sync();
-				if (Array.isArray(now)) {
+				if (Array.isArray(now) && Array.isArray(before)) {
 					// get the deleted items
 					const deleted = before.filter((item) => !now.includes(item));
 					// delete the deleted items

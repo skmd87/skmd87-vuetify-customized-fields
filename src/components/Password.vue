@@ -5,7 +5,6 @@
 				:id="'password-field-' + _uid"
 				v-bind="propsBus"
 				v-model="localPassword"
-				:append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
 				:type="showPassword ? 'text' : 'password'"
 				:rules="calculatedRules"
 				:label="label || 'Password'"
@@ -22,11 +21,8 @@
 					<slot :name="name" v-bind="slotData"></slot>
 				</template>
 				<template #append>
-					<v-progress-circular size="24" v-show="showTooltip" :value="progress" :color="color" rounded class="me-2">
-						<span class="text-caption">{{ progress }}%</span>
-					</v-progress-circular>
-					<v-icon v-if="showPassword" @click="showPassword = !showPassword">mdi-eye-off</v-icon>
-					<v-icon v-else @click="showPassword = !showPassword">mdi-eye</v-icon>
+					<v-icon v-if="showPassword" @click="showPassword = !showPassword">{{ icons.eyeOff }}</v-icon>
+					<v-icon v-else @click="showPassword = !showPassword">{{ icons.eye }}</v-icon>
 				</template>
 			</v-text-field>
 			<!-- <v-sheet color="transparent" class="strength-bar" :style="{ right: trimSides, left: trimSides  }">
@@ -34,7 +30,7 @@
 			</v-sheet> -->
 		</div>
 
-		<v-tooltip top :value="showTooltip" :activator="'#password-field-' + _uid">
+		<v-tooltip v-if="!noStrength" top :value="showTooltip" :activator="'#password-field-' + _uid">
 			<template v-if="!noStrength">
 				<div>
 					<v-icon v-if="hasLowerCase" left color="success">{{ mdiCheck }}</v-icon>
@@ -60,6 +56,11 @@
 					<v-icon v-if="hasLength" left color="success">{{ mdiCheck }}</v-icon>
 					<v-icon v-else left color="error">{{ mdiClose }}</v-icon>
 					<span> {{ $t("vc.min-number-of-char", { minNumber: 8 }) }} </span>
+				</div>
+				<div class="d-flex align-center my-3">
+					<v-progress-linear size="24" :value="progress" :color="color" rounded class="me-2">
+					</v-progress-linear>
+					<div class="text-caption">{{ progress }}%</div>
 				</div>
 			</template>
 		</v-tooltip>
@@ -143,7 +144,7 @@ export default {
 			if (this.noStrength) return false;
 			return (
 				(this.hasLowerCase && this.hasUpperCase && this.hasNumber && this.hasSpecial && this.hasLength) ||
-				"Please enter a valid password"
+				this.$t("vc.password-requirements")
 			);
 		},
 		color() {
@@ -158,17 +159,8 @@ export default {
 		},
 	},
 	created() {},
-	mounted() {
-		this.detectBorderRadius();
-	},
+	mounted() {},
 	methods: {
-		showFeedback({ suggestions, warning }) {
-			console.log("🙏", suggestions);
-			console.log("⚠", warning);
-		},
-		showScore(score) {
-			console.log("💯", score);
-		},
 		focusHandler() {
 			if (this.noStrength) return;
 
@@ -178,17 +170,6 @@ export default {
 			if (this.noStrength) return;
 
 			this.showTooltip = false;
-		},
-
-		detectBorderRadius() {
-			setTimeout(() => {
-				console.log(this.$refs.input);
-				//get computed style
-				const element = this.$refs.input.$el;
-				const cssObj = window.getComputedStyle(element, null);
-				console.log("🚀 ~ file: Password.vue:183 ~ setTimeout ~ cssObj:", cssObj);
-				this.trimSides = cssObj.getPropertyValue("border-radius");
-			}, 5000);
 		},
 	},
 };
@@ -201,22 +182,22 @@ export default {
 }
 .vc-password-container {
 	position: relative;
-	.strength-bar {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 17px;
-	}
+	// .strength-bar {
+	// 	position: absolute;
+	// 	left: 0;
+	// 	right: 0;
+	// 	bottom: 17px;
+	// }
 	.rounded-lg {
 		left: 8px;
 		right: 8px;
 	}
 
-	.v-text-field.v-input--dense ~ .strength-bar {
-		bottom: 13px;
-	}
-	.v-text-field.v-input--dense.v-text-field--outlined ~ .strength-bar {
-		bottom: 30px;
-	}
+	// .v-text-field.v-input--dense ~ .strength-bar {
+	// 	bottom: 13px;
+	// }
+	// .v-text-field.v-input--dense.v-text-field--outlined ~ .strength-bar {
+	// 	bottom: 30px;
+	// }
 }
 </style>

@@ -3,7 +3,7 @@ const { resolve, join } = require("path");
 const { readdirSync } = require("fs");
 import chalk from "chalk";
 import axios from "axios";
-import { mdiUpload, mdiDeleteOutline, mdiPlus } from "@mdi/js";
+import { mdiUpload, mdiDeleteOutline, mdiPlus, mdiEye, mdiEyeOff } from "@mdi/js";
 const defaultOptions = {
 	prefix: "vc",
 	style: {
@@ -17,6 +17,8 @@ const defaultOptions = {
 		upload: mdiUpload,
 		delete: mdiDeleteOutline,
 		add: mdiPlus,
+		eye: mdiEye,
+		eyeOff: mdiEyeOff,
 	},
 	api: {
 		countries: "/v1/lookups/countries",
