@@ -5,16 +5,7 @@
 		</template>
 		<v-date-picker v-model="localValue" :max="localMax" @input="menu = false"></v-date-picker>
 	</v-menu> -->
-	<v-datetime-picker
-		v-model="localValue"
-		filled
-		rounded
-		dense
-		flat
-		v-bind="calculatedProps"
-		:ok-text="$t('common.ok')"
-		:clear-text="$t('common.clear')"
-	>
+	<v-datetime-picker v-model="localValue" v-bind="calculatedProps" :ok-text="$t('common.ok')" :clear-text="$t('common.clear')">
 		<template #dateIcon>
 			<v-icon>mdi-calendar</v-icon>
 		</template>
@@ -25,13 +16,14 @@
 			<slot :name="name"></slot>
 		</template>
 		<template v-for="(slot, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-			<slot :name="name" v-bind="slotData"></slot>		
+			<slot :name="name" v-bind="slotData"></slot>
 		</template>
 	</v-datetime-picker>
 </template>
 
 <script>
 import field from "../mixins/field";
+import { mdiCalendar } from "@mdi/js";
 export default {
 	mixins: [field],
 	props: {
@@ -61,7 +53,7 @@ export default {
 				return new Date(this.value);
 			},
 			set(val) {
-				this.$emit("input", val.toISOString());
+				this.$emit("input", val?.toISOString());
 			},
 		},
 		localMax() {
@@ -89,11 +81,9 @@ export default {
 				textFieldProps: {
 					...this.$attrs?.textFieldProps,
 					label: this.label,
-					appendIcon: "mdi-calendar",
-					filled: true,
-					rounded: true,
-					dense: true,
-					flat: true,
+					appendIcon: mdiCalendar,
+					...this.defaultStyle,
+					...this.$attrs,
 				},
 				datePickerProps: {
 					...this.$attrs?.datePickerProps,
