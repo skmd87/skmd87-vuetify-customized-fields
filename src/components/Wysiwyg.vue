@@ -30,7 +30,7 @@
 					</template>
 					<v-divider inset vertical class="mx-3" />
 					<v-btn title="Clear Format" icon small @click="editor.chain().focus().clearNodes().unsetAllMarks().run()">
-						<v-icon>mdi-format-clear</v-icon>
+						<v-icon>{{ mdiFormatClear }}</v-icon>
 					</v-btn>
 					<v-spacer />
 				</v-toolbar>
@@ -69,7 +69,24 @@ import Link from "@tiptap/extension-link";
 import StarterKit from "@tiptap/starter-kit";
 import field from "../mixins/field";
 import { Extension } from "@tiptap/core";
-
+import {
+	mdiFormatBold,
+	mdiFormatItalic,
+	mdiFormatStrikethrough,
+	mdiFormatAlignLeft,
+	mdiFormatAlignCenter,
+	mdiFormatAlignRight,
+	mdiFormatListBulleted,
+	mdiFormatListNumbered,
+	mdiFormatPilcrowArrowRight,
+	mdiFormatPilcrowArrowLeft,
+	mdiFormatHeader2,
+	mdiFormatHeader3,
+	mdiFormatHeader4,
+	mdiLink,
+	mdiCodeJson,
+	mdiFormatClear,
+} from "@mdi/js";
 const TextDirection = Extension.create({
 	name: "textDirection",
 	addOptions() {
@@ -140,6 +157,7 @@ export default {
 	},
 	data() {
 		return {
+			mdiFormatClear,
 			linkModal: false,
 			isLinkFormValid: false,
 			linkText: "",
@@ -147,21 +165,21 @@ export default {
 			isMounted: false,
 			toolbar: [
 				{
-					icon: "mdi-format-bold",
+					icon: mdiFormatBold,
 					title: "Bold",
 					command: "toggleBold",
 					activeStateName: "bold",
 					type: "button",
 				},
 				{
-					icon: "mdi-format-italic",
+					icon: mdiFormatItalic,
 					title: "Italic",
 					command: "toggleItalic",
 					activeStateName: "italic",
 					type: "button",
 				},
 				{
-					icon: "mdi-format-strikethrough",
+					icon: mdiFormatStrikethrough,
 					title: "Strike",
 					command: "toggleStrike",
 					activeStateName: "strike",
@@ -171,7 +189,7 @@ export default {
 					type: "divider",
 				},
 				{
-					icon: "mdi-format-align-left",
+					icon: mdiFormatAlignLeft,
 					title: "Align Left",
 					command: "setTextAlign",
 					commandParam: "left",
@@ -181,7 +199,7 @@ export default {
 					type: "button",
 				},
 				{
-					icon: "mdi-format-align-center",
+					icon: mdiFormatAlignCenter,
 					title: "Align Center",
 					command: "setTextAlign",
 					commandParam: "center",
@@ -191,7 +209,7 @@ export default {
 					type: "button",
 				},
 				{
-					icon: "mdi-format-align-right",
+					icon: mdiFormatAlignRight,
 					title: "Align Right",
 					command: "setTextAlign",
 					commandParam: "right",
@@ -204,14 +222,14 @@ export default {
 					type: "divider",
 				},
 				{
-					icon: "mdi-format-list-bulleted",
+					icon: mdiFormatListBulleted,
 					title: "Bullet List",
 					command: "toggleBulletList",
 					activeStateName: "bulletList",
 					type: "button",
 				},
 				{
-					icon: "mdi-format-list-numbered",
+					icon: mdiFormatListNumbered,
 					title: "Ordered List",
 					command: "toggleOrderedList",
 					activeStateName: "orderedList",
@@ -221,7 +239,7 @@ export default {
 					type: "divider",
 				},
 				{
-					icon: "mdi-format-pilcrow-arrow-right",
+					icon: mdiFormatPilcrowArrowRight,
 					title: "Left to right",
 					command: "setTextDirection",
 					commandParam: "ltr",
@@ -231,7 +249,7 @@ export default {
 					type: "button",
 				},
 				{
-					icon: "mdi-format-pilcrow-arrow-left",
+					icon: mdiFormatPilcrowArrowLeft,
 					title: "Right to left",
 					command: "setTextDirection",
 					commandParam: "rtl",
@@ -244,7 +262,7 @@ export default {
 					type: "divider",
 				},
 				{
-					icon: "mdi-format-header-2",
+					icon: mdiFormatHeader2,
 					title: "Heading 2",
 					command: "toggleHeading",
 					commandParam: {
@@ -255,7 +273,7 @@ export default {
 					type: "button",
 				},
 				{
-					icon: "mdi-format-header-3",
+					icon: mdiFormatHeader3,
 					title: "Heading 3",
 					command: "toggleHeading",
 					commandParam: {
@@ -266,7 +284,7 @@ export default {
 					type: "button",
 				},
 				{
-					icon: "mdi-format-header-4",
+					icon: mdiFormatHeader4,
 					title: "Heading 4",
 					command: "toggleHeading",
 					commandParam: {
@@ -276,40 +294,12 @@ export default {
 
 					type: "button",
 				},
-				// {
-				// 	icon: "mdi-format-header-5",
-				// 	title: "Heading 5",
-				// 	command: "setHeading",
-				// 	commandParam: {
-				// 		level: 5,
-				// 	},
-				// 	activeStateName: {
-				// 		heading: {
-				// 			level: 5,
-				// 		},
-				// 	},
-				// 	type: "button",
-				// },
-				// {
-				// 	icon: "mdi-format-header-6",
-				// 	title: "Heading 6",
-				// 	command: "setHeading",
-				// 	commandParam: {
-				// 		level: 6,
-				// 	},
-				// 	activeStateName: {
-				// 		heading: {
-				// 			level: 6,
-				// 		},
-				// 	},
-				// 	type: "button",
-				// },
 
 				{
 					type: "divider",
 				},
 				{
-					icon: "mdi-link",
+					icon: mdiLink,
 					title: "Link",
 					command: "toggleLink",
 					activeStateName: "link",
@@ -317,7 +307,7 @@ export default {
 				},
 
 				{
-					icon: "mdi-code-json",
+					icon: mdiCodeJson,
 					title: "Code",
 					command: "toggleCode",
 					activeStateName: "code",
@@ -326,6 +316,7 @@ export default {
 			],
 		};
 	},
+
 	computed: {},
 	mounted() {
 		const self = this;
