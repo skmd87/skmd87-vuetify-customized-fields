@@ -229,6 +229,7 @@ export default {
 								})
 								.then((resp) => {
 									this.files[file.name].uploading = false;
+									
 									this.changeFileName(file.name, resp.file);
 								})
 								.catch((e) => {
@@ -245,6 +246,8 @@ export default {
 			this.$refs.fileInput.value = "";
 		},
 		changeFileName(oldKey, newKey) {
+			if (oldKey === newKey) return;
+
 			if (this.isMultiple) {
 				this.internalValue = this.internalValue.map((item) => {
 					if (item === oldKey) {
