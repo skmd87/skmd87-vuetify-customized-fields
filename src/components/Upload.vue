@@ -229,8 +229,7 @@ export default {
 								})
 								.then((resp) => {
 									this.files[file.name].uploading = false;
-									
-									this.changeFileName(file.name, resp.file);
+									if (file.name !== resp.file) this.changeFileName(file.name, resp.file);
 								})
 								.catch((e) => {
 									this.del(file.name);
