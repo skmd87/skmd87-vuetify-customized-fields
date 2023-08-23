@@ -318,6 +318,13 @@ export default {
 	},
 
 	computed: {},
+	watch: {
+		value(value) {
+			if (this.localValue !== value) {
+				if (this.editor) this.editor.setContent(value);
+			}
+		},
+	},
 	mounted() {
 		const self = this;
 		this.editor = new Editor({
