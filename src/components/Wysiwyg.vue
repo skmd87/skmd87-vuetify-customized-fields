@@ -321,7 +321,7 @@ export default {
 	watch: {
 		value(value) {
 			if (this.localValue !== value) {
-				if (this.editor) this.editor.setContent(value);
+				if (this.editor) this.editor.commands?.setContent(value);
 			}
 		},
 	},
