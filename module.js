@@ -69,6 +69,7 @@ export default function (moduleOptions) {
 		"src/debug.js",
 		"src/plugins/tiptap.client.js",
 		"src/plugins/datetime.js",
+		"src/mixins/mixins.scss",
 	];
 	for (const pathString of pluginsToSync) {
 		this.addPlugin({
