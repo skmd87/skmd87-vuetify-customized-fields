@@ -1,0 +1,44 @@
+@mixin responsive($prop, $mobile-value: "", $tablet-value: "", $desktop-value: "") {
+    @if ($mobile-value) {
+        // @debug "divider offset: #{$display-breakpoints}";
+        @media #{map-get($display-breakpoints, "xs-only")} {
+            #{$prop}: #{$mobile-value};
+        }
+    }
+    @if ($tablet-value) {
+        @media #{map-get($display-breakpoints, "sm-and-up")} {
+            #{$prop}: #{$tablet-value};
+        }
+    }
+    @if ($desktop-value) {
+        @media #{map-get($display-breakpoints, "lg-and-up")} {
+            #{$prop}: #{$desktop-value};
+        }
+    }
+}
+
+@mixin mode($prop, $light-value: "", $dark-value: "") {
+    @if ($light-value) {
+        .theme--light & {
+            #{$prop}: #{$light-value};
+        }
+    }
+    @if ($dark-value) {
+        .theme--dark & {
+            #{$prop}: #{$dark-value};
+        }
+    }
+}
+
+@mixin dir($prop, $ltr-value: "", $rtl-value: "") {
+    @if ($ltr-value) {
+        .v-application--is-ltr & {
+            #{$prop}: #{$ltr-value};
+        }
+    }
+    @if ($rtl-value) {
+        .v-application--is-rtl & {
+            #{$prop}: #{$rtl-value};
+        }
+    }
+}

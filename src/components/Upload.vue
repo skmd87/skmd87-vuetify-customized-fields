@@ -361,6 +361,7 @@ export default {
 };
 </script>
 <style lang="scss">
+@import "../mixins/mixins.scss";
 .upload-images {
 	border: 1px solid transparent;
 	padding: 8px;

@@ -10,6 +10,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../mixins/mixins.scss";
 label.field-label {
 	font-size: 12.5px;
 	// transform: scale(0.75) translateX(-12px);
