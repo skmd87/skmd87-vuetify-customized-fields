@@ -4,7 +4,7 @@
 			<v-autocomplete
 				v-model="localCodeAndIso"
 				dir="ltr"
-				placeholder="$t('common.code')"
+				:placeholder="$t('common.code')"
 				:items="countries"
 				style="max-width: 130px"
 				background-color="transparent"
