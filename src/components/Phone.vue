@@ -4,7 +4,7 @@
 			<v-autocomplete
 				v-model="localCodeAndIso"
 				dir="ltr"
-				placeholder="Code"
+				placeholder="$t('common.code')"
 				:items="countries"
 				style="max-width: 130px"
 				background-color="transparent"
@@ -35,7 +35,7 @@
 							solo
 							v-model="searchModel"
 							@input="highlightFirstItem"
-							label="Search"
+							:label="$t('common.search')"
 						></v-text-field>
 					</v-list-item>
 				</template>
