@@ -314,13 +314,14 @@ export default {
 					type: "button",
 				},
 			],
+			lastContent: null,
 		};
 	},
 
 	computed: {},
 	watch: {
 		value(value) {
-			if (this.localValue !== value) {
+			if (this.lastContent !== value) {
 				if (this.editor) this.editor.commands?.setContent(value);
 			}
 		},
@@ -343,9 +344,12 @@ export default {
 			content: self.localValue,
 			onUpdate: ({ editor }) => {
 				const html = editor.getHTML();
-				self.localValue = !html || html === "<p></p>" ? null : html;
+				const content = !html || html === "<p></p>" ? null : html;
+				self.lastContent = content;
+				self.localValue = content;
 			},
 		});
+		this.lastContent = this.localValue;
 		this.isMounted = true;
 	},
 
