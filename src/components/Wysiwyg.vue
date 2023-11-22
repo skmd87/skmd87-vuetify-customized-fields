@@ -44,7 +44,7 @@
 						<v-form v-model="isLinkFormValid"
 							><v-text-field
 								v-model="linkText"
-								:rules="[$rules.required($t('common.url')), $rules.isValidURL($t('common.url'))]"
+								:rules="[$rules.required($t('common.url'))]"
 								:label="$t('common.url')"
 						/></v-form>
 					</v-card-text>
@@ -328,6 +328,7 @@ export default {
 	},
 	mounted() {
 		const self = this;
+		const content = this.localValue?.replace('<br data-placeholder>', '<p dir="auto"></p>');
 		this.editor = new Editor({
 			extensions: [
 				TextDirection.configure({
@@ -341,10 +342,12 @@ export default {
 					openOnClick: false,
 				}),
 			],
-			content: self.localValue,
+			content,
 			onUpdate: ({ editor }) => {
 				const html = editor.getHTML();
-				const content = !html || html === "<p></p>" ? null : html;
+				let content = !html || html === "<p></p>" ? null : html;
+				var removeRegexP = '<p dir="auto"></p>'
+				content  = content.replace(removeRegexP, "<br data-placeholder>");
 				self.lastContent = content;
 				self.localValue = content;
 			},
