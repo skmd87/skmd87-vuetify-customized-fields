@@ -328,8 +328,8 @@ export default {
 	},
 	mounted() {
 		const self = this;
-const regex = /<br data-placeholder>/g;
-const content = this.localValue?.replace(regex, '<p dir="auto"></p>');
+		const regex = /<br data-placeholder>/g;
+		const content = this.localValue?.replace(regex, '<p dir="auto"></p>');
 		this.editor = new Editor({
 			extensions: [
 				TextDirection.configure({
@@ -347,8 +347,7 @@ const content = this.localValue?.replace(regex, '<p dir="auto"></p>');
 			onUpdate: ({ editor }) => {
 				const html = editor.getHTML();
 				let content = !html || html === "<p></p>" ? null : html;
-				var removeRegexP = /<p dir="auto"><\/p>/g;  // Notice the 'g' flag for global match
-				content = content.replace(removeRegexP, "<br data-placeholder>");
+				content = self.replaceEmptyPTagsWithBr(content)
 				
 				self.lastContent = content;
 				self.localValue = content;
@@ -388,6 +387,19 @@ const content = this.localValue?.replace(regex, '<p dir="auto"></p>');
 			this.editor.chain().focus().extendMarkRange("link").unsetLink().run();
 			this.linkModal = false;
 		},
+		replaceEmptyPTagsWithBr(htmlString) {
+			let parser = new DOMParser();
+			let doc = parser.parseFromString(htmlString, 'text/html');
+
+			let pTags = doc.getElementsByTagName('p');
+			for (let i = 0; i < pTags.length; i++) {
+				if (pTags[i].innerHTML.trim() === '') {
+					pTags[i].innerHTML = '<br data-placeholder>';
+				}
+			}
+
+			return doc.body.innerHTML;
+		}
 	},
 };
 </script>
