@@ -328,7 +328,8 @@ export default {
 	},
 	mounted() {
 		const self = this;
-		const content = this.localValue?.replace('<br data-placeholder>', '<p dir="auto"></p>');
+const regex = /<br data-placeholder>/g;
+const content = this.localValue?.replace(regex, '<p dir="auto"></p>');
 		this.editor = new Editor({
 			extensions: [
 				TextDirection.configure({
@@ -346,8 +347,9 @@ export default {
 			onUpdate: ({ editor }) => {
 				const html = editor.getHTML();
 				let content = !html || html === "<p></p>" ? null : html;
-				var removeRegexP = '<p dir="auto"></p>'
-				content  = content.replace(removeRegexP, "<br data-placeholder>");
+				var removeRegexP = /<p dir="auto"><\/p>/g;  // Notice the 'g' flag for global match
+				content = content.replace(removeRegexP, "<br data-placeholder>");
+				
 				self.lastContent = content;
 				self.localValue = content;
 			},
